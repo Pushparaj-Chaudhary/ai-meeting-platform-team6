@@ -1,4 +1,12 @@
-# in server/.gitignore
-node_modules/
-.env
-dist/
+# Dependencies
+node_modules
+
+# yarn error logs
+yarn-error.log
+
+# Environment varibales
+.env*
+!.env*.example
+
+# Code coverage
+coverage
