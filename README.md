@@ -2,7 +2,7 @@
 
 > Real-Time Video Meetings • AI Summaries • Smart Action Items • Team Collaboration
 
-Built with the MERN stack for Zidio Development – Web Development Domain (March 2026)
+Built with the MERN stack for Zidio Development – Web Development Domain 
 
 ---
 
@@ -123,8 +123,7 @@ CLOUDINARY_API_SECRET=your_secret
 
 ---
 
-## 📄 License
-MIT
+
 
 
 
