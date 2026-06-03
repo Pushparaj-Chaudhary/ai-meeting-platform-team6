@@ -3,6 +3,7 @@ import authRoute from './auth.route.js';
 import userRoute from './user.route.js';
 import docsRoute from './docs.route.js';
 import config from '../../config/config.js';
+import meetingRoute from './meeting.route.js';
 
 const router = express.Router();
 
@@ -14,6 +15,10 @@ const defaultRoutes = [
   {
     path: '/users',
     route: userRoute,
+  },
+  {
+    path: '/meetings',
+    route: meetingRoute,
   },
 ];
 

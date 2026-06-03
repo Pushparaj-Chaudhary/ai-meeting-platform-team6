@@ -56,6 +56,11 @@ if (config.env === 'production') {
 // api routes
 app.use('/api', routes);
 
+app.use('/api', (req, res, next) => {
+  console.log('ROUTE HIT:', req.method, req.url);
+  next();
+}, routes);
+
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
