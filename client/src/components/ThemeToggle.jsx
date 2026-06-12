@@ -8,24 +8,9 @@ const ThemeToggle = ({ inline = false }) => {
   return (
     <button
       onClick={toggleTheme}
-      style={{
-        position: inline ? 'relative' : 'absolute',
-        top: inline ? 'auto' : '2rem',
-        right: inline ? 'auto' : '2rem',
-        background: 'var(--glass-bg)',
-        border: '1px solid var(--glass-border)',
-        borderRadius: '50%',
-        width: '40px',
-        height: '40px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        color: 'var(--text-main)',
-        backdropFilter: 'blur(10px)',
-        zIndex: 100,
-        transition: 'all 0.3s ease'
-      }}
+      className={`bg-glass-bg border border-glass-border rounded-full w-10 h-10 flex items-center justify-center cursor-pointer text-text-main backdrop-blur-md z-100 transition-all duration-300 ${
+        inline ? 'relative top-auto right-auto' : 'absolute top-8 right-8'
+      }`}
       aria-label="Toggle Theme"
     >
       {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}

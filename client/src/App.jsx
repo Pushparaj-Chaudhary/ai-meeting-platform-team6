@@ -20,14 +20,14 @@ const AuthWrapper = ({ children }) => {
   const { loading } = useAuth();
   if (loading) {
     return (
-      <div className="min-h-screen w-full bg-(--primary-bg) flex flex-col justify-center items-center text-(--text-main)">
-        <Video className="text-(--accent-color) animate-bounce mb-6" size={64} />
+      <div className="min-h-screen w-full bg-primary-bg flex flex-col justify-center items-center text-text-main">
+        <Video className="text-accent-color animate-bounce mb-6" size={64} />
         <div className="flex gap-2">
-          <div className="w-3 h-3 bg-(--accent-color) rounded-full animate-ping" style={{ animationDuration: '1s' }}></div>
+          <div className="w-3 h-3 bg-accent-color rounded-full animate-ping" style={{ animationDuration: '1s' }}></div>
           <div className="w-3 h-3 bg-purple-500 rounded-full animate-ping" style={{ animationDuration: '1s', animationDelay: '0.2s' }}></div>
           <div className="w-3 h-3 bg-pink-500 rounded-full animate-ping" style={{ animationDuration: '1s', animationDelay: '0.4s' }}></div>
         </div>
-        <h2 className="mt-6 text-xl font-medium text-(--text-muted) animate-pulse">Initializing IntellMeet...</h2>
+        <h2 className="mt-6 text-xl font-medium text-text-muted animate-pulse">Initializing IntellMeet...</h2>
       </div>
     );
   }

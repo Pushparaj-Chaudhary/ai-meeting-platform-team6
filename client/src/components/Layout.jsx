@@ -15,7 +15,8 @@ import {
   X,
   Sun,
   Moon,
-  ChevronDown
+  ChevronDown,
+  DeleteIcon
 } from 'lucide-react';
 
 const Layout = () => {
@@ -103,7 +104,7 @@ const Layout = () => {
   };
 
   return (
-    <div className="app-layout-wrapper">
+    <div className="flex min-h-screen w-screen bg-primary-bg overflow-hidden">
       {/* Sidebar Overlay for Mobile */}
       {isMobileOpen && (
         <div 
@@ -113,13 +114,15 @@ const Layout = () => {
       )}
 
       {/* Sidebar Nav */}
-      <aside className={`app-sidebar ${isMobileOpen ? 'mobile-open' : ''} fixed lg:static top-0 bottom-0 left-0 h-full w-[260px]`}>
-        <div className="sidebar-logo">
-          <Video className="text-(--text-main)" size={26} />
+      <aside className={`w-[260px] bg-secondary-bg border-r border-border-color flex flex-col shrink-0 transition-transform duration-300 z-40 fixed lg:static top-0 bottom-0 left-0 h-full ${
+        isMobileOpen ? 'translate-x-0' : 'translate-x-[-260px] lg:translate-x-0'
+      }`}>
+        <div className="p-8 px-7 flex items-center gap-3 text-[1.35rem] font-extrabold tracking-tight border-b border-border-color">
+          <Video className="text-text-main" size={26} />
           <span>IntellMeet</span>
         </div>
 
-        <nav className="sidebar-nav-list">
+        <nav className="p-6 px-4 flex flex-col gap-[0.35rem] grow">
           {navLinks.map((link) => {
             const Icon = link.icon;
             const isActive = location.pathname === link.path;
@@ -127,7 +130,11 @@ const Layout = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`sidebar-nav-item ${isActive ? 'active' : ''}`}
+                className={`flex items-center gap-4 py-[0.85rem] px-[1.15rem] font-semibold text-[0.95rem] rounded-[14px] transition-all duration-250 ease-out border ${
+                  isActive 
+                    ? 'text-text-main bg-sidebar-active-bg border-sidebar-active-border shadow-[0_4px_12px_-5px_rgba(0,0,0,0.05)]' 
+                    : 'text-text-muted border-transparent hover:text-text-main hover:bg-feature-hover'
+                }`}
               >
                 <Icon size={20} />
                 <span>{link.label}</span>
@@ -137,17 +144,21 @@ const Layout = () => {
           
           <Link
             to="/settings"
-            className={`sidebar-nav-item ${location.pathname === '/settings' ? 'active' : ''}`}
+            className={`flex items-center gap-4 py-[0.85rem] px-[1.15rem] font-semibold text-[0.95rem] rounded-[14px] transition-all duration-250 ease-out border ${
+              location.pathname === '/settings' 
+                ? 'text-text-main bg-sidebar-active-bg border-sidebar-active-border shadow-[0_4px_12px_-5px_rgba(0,0,0,0.05)]' 
+                : 'text-text-muted border-transparent hover:text-text-main hover:bg-feature-hover'
+            }`}
           >
             <Settings size={20} />
             <span>Settings</span>
           </Link>
         </nav>
 
-        <div className="sidebar-footer">
+        <div className="p-6 border-t border-border-color">
           <button 
             onClick={handleLogout} 
-            className="dropdown-item flex items-center justify-start gap-3 w-full px-4 py-3 text-red-500 hover:bg-red-500/10 hover:text-red-500 rounded-xl"
+            className="flex items-center justify-start gap-3 w-full px-4 py-3 text-red-500 hover:bg-red-500/10 rounded-xl cursor-pointer text-sm font-medium transition-all bg-transparent border-none"
           >
             <LogOut size={20} />
             <span>Sign Out</span>
@@ -156,35 +167,39 @@ const Layout = () => {
       </aside>
 
       {/* Main View Area */}
-      <div className="app-main-view">
+      <div className="flex-1 flex flex-col h-screen overflow-hidden max-w-full">
         {/* Top Header */}
-        <header className="app-top-header">
+        <header className="h-20 flex items-center justify-between px-6 lg:px-10 border-b border-border-color bg-secondary-bg z-30">
           <div className="flex items-center gap-4">
             {/* Mobile Toggle Button */}
             <button 
-              className="lg:hidden p-2 text-(--text-main) hover:bg-(--feature-hover) rounded-xl"
+              className="lg:hidden p-2 text-text-main hover:bg-feature-hover rounded-xl"
               onClick={() => setIsMobileOpen(!isMobileOpen)}
             >
               {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
             
             <h2 className="text-xl font-bold hidden sm:block">
-              {getGreeting()}, <span className="font-extrabold text-(--text-main)">{user?.name || 'Alex'}!</span>
+              {getGreeting()}, <span className="font-extrabold text-text-main">{user?.name || 'Alex'}!</span>
             </h2>
           </div>
 
           {/* Search bar */}
-          <div className="header-search-container hidden md:block">
-            <Search size={18} />
-            <input type="text" placeholder="Search meetings, recordings, transcriptions..." />
+          <div className="relative w-80 max-w-full hidden md:block">
+            <Search className="absolute left-[0.95rem] top-1/2 -translate-y-1/2 text-text-muted" size={18} />
+            <input 
+              type="text" 
+              placeholder="Search meetings, recordings, transcriptions..." 
+              className="w-full bg-primary-bg border border-border-color rounded-xl py-[0.65rem] pr-4 pl-10 text-text-main text-sm outline-none transition-all focus:border-text-main focus:ring-2 focus:ring-border-color"
+            />
           </div>
 
           {/* Actions & Profile */}
-          <div className="header-user-menu">
+          <div className="flex items-center gap-4">
             {/* Theme Toggle */}
             <button 
               onClick={toggleTheme}
-              className="p-2.5 text-(--text-main) hover:bg-(--feature-hover) rounded-xl transition-all"
+              className="p-2.5 text-text-main hover:bg-feature-hover rounded-xl transition-all"
               aria-label="Toggle Theme"
             >
               {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
@@ -194,26 +209,23 @@ const Layout = () => {
             <div className="relative" ref={notifRef}>
               <button 
                 onClick={() => setIsNotifOpen(!isNotifOpen)}
-                className="p-2.5 text-(--text-main) hover:bg-(--feature-hover) rounded-xl relative flex items-center justify-center"
+                className="p-2.5 text-text-main hover:bg-feature-hover rounded-xl relative flex items-center justify-center"
                 aria-label="Notifications Center"
               >
                 <Bell size={20} />
                 {hasUnread && (
-                  <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 border-2 border-(--secondary-bg) rounded-full"></span>
+                  <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 border-2 border-secondary-bg rounded-full"></span>
                 )}
               </button>
 
               {isNotifOpen && (
-                <div 
-                  className="user-dropdown-card" 
-                  style={{ width: '320px', top: '52px', right: 0, padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}
-                >
-                  <div className="flex justify-between items-center pb-2 border-b border-(--border-color)">
-                    <span className="font-bold text-sm text-(--text-main)">Notifications</span>
+                <div className="absolute top-[52px] right-0 w-[320px] bg-secondary-bg border border-border-color rounded-2xl shadow-card-shadow p-4 flex flex-col gap-3 z-50 animate-slide-up">
+                  <div className="flex justify-between items-center pb-2 border-b border-border-color">
+                    <span className="font-bold text-sm text-text-main">Notifications</span>
                     {hasUnread && (
                       <button 
                         onClick={handleMarkAllRead}
-                        className="text-[10px] font-bold text-(--text-muted) hover:text-(--text-main) bg-transparent border-none cursor-pointer"
+                        className="text-[10px] font-bold text-text-muted hover:text-text-main bg-transparent border-none cursor-pointer"
                       >
                         Mark all read
                       </button>
@@ -222,7 +234,7 @@ const Layout = () => {
                   
                   <div className="overflow-y-auto max-h-64 space-y-2 pr-1">
                     {notifications.length === 0 ? (
-                      <div className="text-center py-6 text-xs text-(--text-muted)">
+                      <div className="text-center py-6 text-xs text-text-muted">
                         No notifications yet.
                       </div>
                     ) : (
@@ -231,21 +243,21 @@ const Layout = () => {
                           key={notif.id} 
                           className={`p-2.5 rounded-xl border transition-all text-left relative group ${
                             notif.unread 
-                              ? 'bg-(--sidebar-active-bg) border-(--sidebar-active-border)' 
-                              : 'bg-transparent border-transparent hover:bg-(--feature-hover)'
+                              ? 'bg-sidebar-active-bg border-sidebar-active-border' 
+                              : 'bg-transparent border-transparent hover:bg-feature-hover'
                           }`}
                         >
                           <div className="flex justify-between items-start gap-2">
-                            <span className="font-bold text-xs text-(--text-main) line-clamp-1">{notif.title}</span>
-                            <span className="text-[8px] text-(--text-muted) shrink-0 mt-0.5">{notif.time}</span>
+                            <span className="font-bold text-xs text-text-main line-clamp-1">{notif.title}</span>
+                            <span className="text-[8px] text-text-muted shrink-0 mt-0.5">{notif.time}</span>
                           </div>
-                          <p className="text-[11px] text-(--text-muted) mt-1 leading-normal pr-4">{notif.message}</p>
+                          <p className="text-[11px] text-text-muted mt-1 leading-normal pr-4">{notif.message}</p>
                           <button
                             onClick={() => handleDeleteNotif(notif.id)}
-                            className="absolute right-2 bottom-2 p-0.5 rounded-full hover:bg-(--border-color) text-(--text-muted) hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity bg-transparent border-none cursor-pointer"
+                            className="absolute right-2 bottom-2 p-0.5 rounded-full hover:bg-border-color text-text-muted hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity bg-transparent border-none cursor-pointer"
                             title="Delete notification"
                           >
-                            <X size={10} />
+                            <DeleteIcon size={10} />
                           </button>
                         </div>
                       ))
@@ -256,38 +268,38 @@ const Layout = () => {
             </div>
 
             {/* User Dropdown */}
-            <div className="avatar-wrapper" ref={dropdownRef}>
+            <div className="relative cursor-pointer" ref={dropdownRef}>
               <div 
                 className="flex items-center gap-2"
                 onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
               >
                 {user?.avatar ? (
-                  <img src={user.avatar} alt={user?.name} className="avatar-image" />
+                  <img src={user.avatar} alt={user?.name} className="w-10 h-10 rounded-full object-cover border-2 border-border-color transition-colors hover:border-text-main" />
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-(--border-color) flex items-center justify-center text-(--text-main) font-bold border-2 border-(--border-color)">
+                  <div className="w-10 h-10 rounded-full bg-border-color flex items-center justify-center text-text-main font-bold border-2 border-border-color">
                     {user?.name?.charAt(0).toUpperCase() || 'U'}
                   </div>
                 )}
-                <ChevronDown size={16} className="text-(--text-muted)" />
+                <ChevronDown size={16} className="text-text-muted" />
               </div>
 
               {isUserDropdownOpen && (
-                <div className="user-dropdown-card">
+                <div className="absolute top-[52px] right-0 w-[220px] bg-secondary-bg border border-border-color rounded-2xl shadow-card-shadow p-3 flex flex-col gap-1 z-50 animate-slide-up">
                   <div className="px-3 py-2">
-                    <p className="font-bold text-sm text-(--text-main) truncate">{user?.name || 'User'}</p>
-                    <p className="text-xs text-(--text-muted) truncate">{user?.email || 'user@example.com'}</p>
+                    <p className="font-bold text-sm text-text-main truncate">{user?.name || 'User'}</p>
+                    <p className="text-xs text-text-muted truncate">{user?.email || 'user@example.com'}</p>
                   </div>
-                  <div className="dropdown-divider"></div>
-                  <Link to="/profile" className="dropdown-item">
+                  <div className="h-px bg-border-color my-2"></div>
+                  <Link to="/profile" className="flex items-center gap-3 py-[0.65rem] px-[0.85rem] text-sm text-text-muted hover:text-text-main hover:bg-feature-hover font-medium rounded-xl transition-all w-full text-left cursor-pointer bg-transparent border-none">
                     <User size={16} />
                     <span>My Profile</span>
                   </Link>
-                  <Link to="/settings" className="dropdown-item">
+                  <Link to="/settings" className="flex items-center gap-3 py-[0.65rem] px-[0.85rem] text-sm text-text-muted hover:text-text-main hover:bg-feature-hover font-medium rounded-xl transition-all w-full text-left cursor-pointer bg-transparent border-none">
                     <Settings size={16} />
                     <span>Account Settings</span>
                   </Link>
-                  <div className="dropdown-divider"></div>
-                  <button onClick={handleLogout} className="dropdown-item text-red-500 hover:text-red-500">
+                  <div className="h-px bg-border-color my-2"></div>
+                  <button onClick={handleLogout} className="flex items-center gap-3 py-[0.65rem] px-[0.85rem] text-sm text-red-500 hover:bg-red-500/10 hover:text-red-500 font-medium rounded-xl transition-all w-full text-left cursor-pointer bg-transparent border-none">
                     <LogOut size={16} />
                     <span>Sign Out</span>
                   </button>
@@ -298,7 +310,7 @@ const Layout = () => {
         </header>
 
         {/* Content Body */}
-        <main className="app-scroll-content">
+        <main className="flex-1 overflow-y-auto p-6 lg:p-10">
           <Outlet />
         </main>
       </div>

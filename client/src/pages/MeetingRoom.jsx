@@ -523,7 +523,7 @@ const MeetingRoom = () => {
     }, [peer.stream]);
 
     return (
-      <div className="relative bg-(--secondary-bg) rounded-3xl overflow-hidden border border-(--border-color) shadow-2xl flex items-center justify-center group aspect-video">
+      <div className="relative bg-secondary-bg rounded-3xl overflow-hidden border border-border-color shadow-2xl flex items-center justify-center group aspect-video">
         <video
           ref={videoRef}
           autoPlay
@@ -537,7 +537,7 @@ const MeetingRoom = () => {
             </div>
           </div>
         )}
-        <div className="absolute bottom-4 left-4 bg-(--glass-bg) border border-(--border-color) px-3 py-1.5 rounded-lg backdrop-blur-md text-xs font-semibold text-(--text-main) shadow flex items-center gap-1.5">
+        <div className="absolute bottom-4 left-4 bg-glass-bg border border-border-color px-3 py-1.5 rounded-lg backdrop-blur-md text-xs font-semibold text-text-main shadow flex items-center gap-1.5">
           <span>{peer.userName}</span>
           {!peer.audioEnabled && <MicOff size={14} className="text-red-500" />}
         </div>
@@ -547,10 +547,10 @@ const MeetingRoom = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-(--primary-bg) flex justify-center items-center text-(--text-main) font-sans">
+      <div className="min-h-screen bg-primary-bg flex justify-center items-center text-text-main font-sans">
         <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-(--text-main) mb-4"></div>
-          <div className="text-lg font-medium text-(--text-muted) animate-pulse">Connecting to server...</div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-text-main mb-4"></div>
+          <div className="text-lg font-medium text-text-muted animate-pulse">Connecting to server...</div>
         </div>
       </div>
     );
@@ -559,11 +559,11 @@ const MeetingRoom = () => {
   /* ------------------- LOBBY VIEW ------------------- */
   if (!isJoined) {
     return (
-      <div className="min-h-screen w-full bg-(--primary-bg) text-(--text-main) font-sans flex items-center justify-center p-4">
+      <div className="min-h-screen w-full bg-primary-bg text-text-main font-sans flex items-center justify-center p-4">
         <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center animate-fade-in-up">
           {/* Left Panel: Camera Preview */}
           <div className="space-y-4">
-            <div className="relative bg-(--secondary-bg) border border-(--border-color) aspect-video rounded-3xl overflow-hidden shadow-2xl flex items-center justify-center">
+            <div className="relative bg-secondary-bg border border-border-color aspect-video rounded-3xl overflow-hidden shadow-2xl flex items-center justify-center">
               <video 
                 ref={lobbyVideoRef}
                 autoPlay 
@@ -572,7 +572,7 @@ const MeetingRoom = () => {
                 className={`w-full h-full object-cover ${!videoEnabled ? 'hidden' : ''}`}
               />
               {!videoEnabled && (
-                <div className="absolute inset-0 flex items-center justify-center bg-zinc-950">
+                <div className="absolute inset-0 flex items-center justify-center bg-zinc-955">
                   <div className="w-28 h-28 rounded-full bg-zinc-900 border-4 border-zinc-800 flex items-center justify-center text-5xl text-zinc-500 font-extrabold shadow-inner">
                     {user?.name?.charAt(0).toUpperCase()}
                   </div>
@@ -608,23 +608,23 @@ const MeetingRoom = () => {
           </div>
 
           {/* Right Panel: Join details */}
-          <div className="space-y-6 bg-(--secondary-bg) p-8 rounded-3xl border border-(--border-color) shadow-2xl">
+          <div className="space-y-6 bg-secondary-bg p-8 rounded-3xl border border-border-color shadow-2xl">
             <div>
-              <Link to="/meetings" className="flex items-center gap-1.5 text-xs font-semibold text-(--text-muted) hover:text-(--text-main) transition-colors mb-3 bg-transparent border-none cursor-pointer no-underline">
+              <Link to="/meetings" className="flex items-center gap-1.5 text-xs font-semibold text-text-muted hover:text-text-main transition-colors mb-3 bg-transparent border-none cursor-pointer no-underline">
                 <ChevronLeft size={14} />
                 Back to Dashboard
               </Link>
               <h2 className="text-2xl font-extrabold tracking-tight">{meeting?.title}</h2>
-              <p className="text-sm text-(--text-muted) font-mono mt-1 bg-(--primary-bg) px-3 py-1.5 rounded-xl border border-(--border-color) inline-block">
+              <p className="text-sm text-text-muted font-mono mt-1 bg-primary-bg px-3 py-1.5 rounded-xl border border-border-color inline-block">
                 Room Code: {meeting?.meetingCode}
               </p>
             </div>
 
-            <div className="space-y-4 pt-4 border-t border-(--border-color)">
+            <div className="space-y-4 pt-4 border-t border-border-color">
               <div className="space-y-1">
-                <span className="text-[10px] font-bold text-(--text-muted) uppercase tracking-wider">Joining as</span>
-                <p className="text-sm font-semibold flex items-center gap-1.5 text-(--text-main)">
-                  <UserCheck size={16} className="text-(--text-muted)" />
+                <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Joining as</span>
+                <p className="text-sm font-semibold flex items-center gap-1.5 text-text-main">
+                  <UserCheck size={16} className="text-text-muted" />
                   {user?.name}
                 </p>
               </div>
@@ -632,7 +632,7 @@ const MeetingRoom = () => {
 
             <button
               onClick={handleJoinCall}
-              className="btn-metallic w-full py-3 text-base justify-center flex items-center gap-2"
+              className="w-full inline-flex items-center justify-center gap-2 bg-linear-to-br from-[#3f3f46] to-[#18181b] dark:from-[#f4f4f5] dark:to-[#a1a1aa] text-white dark:text-zinc-950 rounded-2xl font-semibold text-base px-7 py-3 relative overflow-hidden transition-all duration-300 shadow-md min-h-[46px] hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 before:content-[''] before:absolute before:top-0 before:left-[-150%] before:w-full before:h-full before:bg-[linear-gradient(90deg,transparent,var(--shimmer-color),transparent)] before:transition-all before:duration-700 hover:before:left-[150%] cursor-pointer"
             >
               <Video size={20} />
               <span>Join Meeting</span>
@@ -647,15 +647,15 @@ const MeetingRoom = () => {
   const typingList = Object.values(typingUsers);
 
   return (
-    <div className="min-h-screen w-full bg-(--primary-bg) flex flex-col font-sans text-(--text-main) overflow-hidden">
+    <div className="min-h-screen w-full bg-primary-bg flex flex-col font-sans text-text-main overflow-hidden">
       {/* Room Header */}
-      <header className="bg-(--secondary-bg) border-b border-(--border-color) px-6 py-4 flex justify-between items-center z-10 shrink-0">
+      <header className="bg-secondary-bg border-b border-border-color px-6 py-4 flex justify-between items-center z-10 shrink-0">
         <div className="min-w-0 flex-1 mr-4">
-          <h1 className="text-xl font-bold flex items-center gap-2 text-(--text-main) leading-none">
-            <Video className="text-(--text-main) shrink-0" size={24} />
+          <h1 className="text-xl font-bold flex items-center gap-2 text-text-main leading-none">
+            <Video className="text-text-main shrink-0" size={24} />
             <span className="truncate" title={meeting?.title}>{meeting?.title}</span>
           </h1>
-          <p className="text-[11px] text-(--text-muted) font-mono mt-1.5 bg-(--primary-bg) border border-(--border-color) inline-block px-2.5 py-0.5 rounded-lg">
+          <p className="text-[11px] text-text-muted font-mono mt-1.5 bg-primary-bg border border-border-color inline-block px-2.5 py-0.5 rounded-lg">
             Room Code: {meeting?.meetingCode}
           </p>
         </div>
@@ -688,7 +688,7 @@ const MeetingRoom = () => {
             'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
           }`}>
             {/* Local Video Tile */}
-            <div className="relative bg-(--secondary-bg) rounded-3xl overflow-hidden border border-(--border-color) shadow-2xl flex items-center justify-center group aspect-video">
+            <div className="relative bg-secondary-bg rounded-3xl overflow-hidden border border-border-color shadow-2xl flex items-center justify-center group aspect-video">
               <video
                 ref={localVideoRef}
                 autoPlay
@@ -703,7 +703,7 @@ const MeetingRoom = () => {
                   </div>
                 </div>
               )}
-              <div className="absolute bottom-4 left-4 bg-(--glass-bg) border border-(--border-color) px-3 py-1.5 rounded-lg backdrop-blur-md text-xs font-semibold text-(--text-main) shadow flex items-center gap-1.5">
+              <div className="absolute bottom-4 left-4 bg-glass-bg border border-border-color px-3 py-1.5 rounded-lg backdrop-blur-md text-xs font-semibold text-text-main shadow flex items-center gap-1.5">
                 <span>You</span>
                 {isScreenSharing && <span className="bg-zinc-800 text-white px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider">Sharing</span>}
                 {!audioEnabled && <MicOff size={14} className="text-red-500" />}
@@ -719,11 +719,11 @@ const MeetingRoom = () => {
 
         {/* SIDE BAR PANELS (Chat / Participants) */}
         {activePanel && (
-          <aside className="w-80 bg-(--secondary-bg) border-l border-(--border-color) flex flex-col z-20 shrink-0 animate-fade-in-up">
+          <aside className="w-80 bg-secondary-bg border-l border-border-color flex flex-col z-20 shrink-0 animate-fade-in-up">
             
             {/* Panel Header */}
-            <div className="p-4 border-b border-(--border-color) flex justify-between items-center bg-(--primary-bg)">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-(--text-main) flex items-center gap-2">
+            <div className="p-4 border-b border-border-color flex justify-between items-center bg-primary-bg">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-text-main flex items-center gap-2">
                 {activePanel === 'chat' && (
                   <>
                     <MessageSquare size={16} />
@@ -739,7 +739,7 @@ const MeetingRoom = () => {
               </h3>
               <button 
                 onClick={() => setActivePanel(null)}
-                className="p-1 hover:bg-(--border-color) rounded-full text-(--text-muted) hover:text-(--text-main) bg-transparent border-none cursor-pointer"
+                className="p-1 hover:bg-border-color rounded-full text-text-muted hover:text-text-main bg-transparent border-none cursor-pointer"
               >
                 <X size={16} />
               </button>
@@ -754,8 +754,8 @@ const MeetingRoom = () => {
                   <div className="space-y-4">
                     {chatMessages.length === 0 ? (
                       <div className="text-center py-10">
-                        <MessageSquare size={36} className="mx-auto text-(--text-muted) opacity-40 mb-2" />
-                        <p className="text-xs text-(--text-muted)">No messages yet. Send a chat to begin!</p>
+                        <MessageSquare size={36} className="mx-auto text-text-muted opacity-40 mb-2" />
+                        <p className="text-xs text-text-muted">No messages yet. Send a chat to begin!</p>
                       </div>
                     ) : (
                       chatMessages.map((msg) => {
@@ -763,13 +763,13 @@ const MeetingRoom = () => {
                         return (
                           <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
                             <div className="flex items-center gap-1.5 mb-1">
-                              <span className="text-[10px] font-bold text-(--text-muted)">{isMe ? 'You' : msg.senderName}</span>
-                              <span className="text-[8px] text-(--text-muted)">{msg.timestamp}</span>
+                              <span className="text-[10px] font-bold text-text-muted">{isMe ? 'You' : msg.senderName}</span>
+                              <span className="text-[8px] text-text-muted">{msg.timestamp}</span>
                             </div>
                             <div className={`px-3.5 py-2 rounded-2xl max-w-[85%] text-xs font-semibold leading-relaxed ${
                               isMe 
-                                ? 'bg-(--text-main) text-(--secondary-bg) rounded-tr-none' 
-                                : 'bg-(--primary-bg) text-(--text-main) rounded-tl-none border border-(--border-color)'
+                                ? 'bg-text-main text-secondary-bg rounded-tr-none' 
+                                : 'bg-primary-bg text-text-main rounded-tl-none border border-border-color'
                             }`}>
                               {msg.text}
                             </div>
@@ -781,10 +781,10 @@ const MeetingRoom = () => {
                 </div>
 
                 {/* Typing Banner & Form */}
-                <div className="p-3 border-t border-(--border-color) space-y-2 bg-(--primary-bg)">
+                <div className="p-3 border-t border-border-color space-y-2 bg-primary-bg">
                   {/* Typing Indicator list */}
                   {typingList.length > 0 && (
-                    <div className="text-[10px] text-(--text-muted) italic font-semibold px-1 animate-pulse">
+                    <div className="text-[10px] text-text-muted italic font-semibold px-1 animate-pulse">
                       {typingList.join(', ')} {typingList.length === 1 ? 'is' : 'are'} typing...
                     </div>
                   )}
@@ -796,13 +796,12 @@ const MeetingRoom = () => {
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
                       onKeyDown={handleChatKeyPress}
-                      className="flex-1 bg-(--secondary-bg) border border-(--border-color) rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-(--text-main)"
+                      className="flex-1 bg-secondary-bg border border-border-color rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-text-main"
                       style={{ minHeight: '38px' }}
                     />
                     <button
                       type="submit"
-                      className="btn-metallic btn-square flex items-center justify-center"
-                      style={{ width: '38px', height: '38px', borderRadius: '12px' }}
+                      className="w-[38px] h-[38px] flex items-center justify-center p-0 shrink-0 rounded-xl bg-linear-to-br from-[#3f3f46] to-[#18181b] dark:from-[#f4f4f5] dark:to-[#a1a1aa] text-white dark:text-zinc-950 hover:-translate-y-px transition-all cursor-pointer border-none"
                     >
                       <Send size={14} />
                     </button>
@@ -815,17 +814,17 @@ const MeetingRoom = () => {
             {activePanel === 'participants' && (
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {/* Local Participant */}
-                <div className="p-3 bg-(--primary-bg) border border-(--border-color) rounded-2xl flex items-center justify-between">
+                <div className="p-3 bg-primary-bg border border-border-color rounded-2xl flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-(--secondary-bg) border border-(--border-color) flex items-center justify-center font-bold text-xs">
+                    <div className="w-8 h-8 rounded-full bg-secondary-bg border border-border-color flex items-center justify-center font-bold text-xs">
                       {user?.name?.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-(--text-main)">{user?.name} (You)</p>
-                      <p className="text-[9px] text-(--text-muted)">Organizer</p>
+                      <p className="text-xs font-bold text-text-main">{user?.name} (You)</p>
+                      <p className="text-[9px] text-text-muted">Organizer</p>
                     </div>
                   </div>
-                  <div className="flex gap-2 text-(--text-muted)">
+                  <div className="flex gap-2 text-text-muted">
                     {audioEnabled ? <Mic size={14} /> : <MicOff size={14} className="text-red-500" />}
                     {videoEnabled ? <Video size={14} /> : <VideoOff size={14} className="text-red-500" />}
                   </div>
@@ -833,21 +832,21 @@ const MeetingRoom = () => {
 
                 {/* Remote Participants */}
                 {peers.map((peer) => (
-                  <div key={peer.socketId} className="p-3 bg-(--primary-bg) border border-(--border-color) rounded-2xl flex items-center justify-between">
+                  <div key={peer.socketId} className="p-3 bg-primary-bg border border-border-color rounded-2xl flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       {peer.userAvatar ? (
-                        <img src={peer.userAvatar} alt={peer.userName} className="w-8 h-8 rounded-full object-cover border border-(--border-color)" />
+                        <img src={peer.userAvatar} alt={peer.userName} className="w-8 h-8 rounded-full object-cover border border-border-color" />
                       ) : (
-                        <div className="w-8 h-8 rounded-full bg-(--secondary-bg) border border-(--border-color) flex items-center justify-center font-bold text-xs">
+                        <div className="w-8 h-8 rounded-full bg-secondary-bg border border-border-color flex items-center justify-center font-bold text-xs">
                           {peer.userName.charAt(0).toUpperCase()}
                         </div>
                       )}
                       <div>
-                        <p className="text-xs font-bold text-(--text-main) truncate max-w-[120px]">{peer.userName}</p>
-                        <p className="text-[9px] text-(--text-muted)">Participant</p>
+                        <p className="text-xs font-bold text-text-main truncate max-w-[120px]">{peer.userName}</p>
+                        <p className="text-[9px] text-text-muted">Participant</p>
                       </div>
                     </div>
-                    <div className="flex gap-2 text-(--text-muted)">
+                    <div className="flex gap-2 text-text-muted">
                       {peer.audioEnabled ? <Mic size={14} /> : <MicOff size={14} className="text-red-500" />}
                       {peer.videoEnabled ? <Video size={14} /> : <VideoOff size={14} className="text-red-500" />}
                     </div>
@@ -860,7 +859,7 @@ const MeetingRoom = () => {
       </div>
 
       {/* Control Buttons Bar */}
-      <footer className="bg-(--secondary-bg) border-t border-(--border-color) p-5 flex flex-wrap justify-between items-center gap-4 z-10 shrink-0">
+      <footer className="bg-secondary-bg border-t border-border-color p-5 flex flex-wrap justify-between items-center gap-4 z-10 shrink-0">
         
         {/* Left Actions */}
         <div className="flex items-center gap-2.5">
@@ -869,7 +868,7 @@ const MeetingRoom = () => {
             onClick={handleToggleAudio}
             className={`p-3.5 rounded-xl border transition-all duration-200 cursor-pointer shadow-sm flex items-center justify-center ${
               audioEnabled 
-              ? 'bg-(--primary-bg) border-(--border-color) text-(--text-main) hover:bg-(--border-color)'
+              ? 'bg-primary-bg border-border-color text-text-main hover:bg-border-color'
               : 'bg-red-500 border-red-400 text-white shadow-red-500/10 hover:bg-red-600'
             }`}
             title={audioEnabled ? "Mute Microphone" : "Unmute Microphone"}
@@ -883,7 +882,7 @@ const MeetingRoom = () => {
             onClick={handleToggleVideo}
             className={`p-3.5 rounded-xl border transition-all duration-200 cursor-pointer shadow-sm flex items-center justify-center ${
               videoEnabled 
-              ? 'bg-(--primary-bg) border-(--border-color) text-(--text-main) hover:bg-(--border-color)'
+              ? 'bg-primary-bg border-border-color text-text-main hover:bg-border-color'
               : 'bg-red-500 border-red-400 text-white shadow-red-500/10 hover:bg-red-600'
             }`}
             title={videoEnabled ? "Turn Camera Off" : "Turn Camera On"}
@@ -898,7 +897,7 @@ const MeetingRoom = () => {
             className={`p-3.5 rounded-xl border transition-all duration-200 cursor-pointer shadow-sm flex items-center justify-center ${
               isScreenSharing 
               ? 'bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700'
-              : 'bg-(--primary-bg) border-(--border-color) text-(--text-main) hover:bg-(--border-color)'
+              : 'bg-primary-bg border-border-color text-text-main hover:bg-border-color'
             }`}
             title={isScreenSharing ? "Stop Sharing Screen" : "Share Screen"}
             style={{ minHeight: '46px', minWidth: '46px' }}
@@ -912,7 +911,7 @@ const MeetingRoom = () => {
             className={`p-3.5 rounded-xl border transition-all duration-200 cursor-pointer shadow-sm flex items-center justify-center ${
               isRecording 
               ? 'bg-red-500 border-red-400 text-white hover:bg-red-600 animate-pulse'
-              : 'bg-(--primary-bg) border-(--border-color) text-(--text-main) hover:bg-(--border-color)'
+              : 'bg-primary-bg border-border-color text-text-main hover:bg-border-color'
             }`}
             title={isRecording ? "Stop Recording Call" : "Record Call"}
             style={{ minHeight: '46px', minWidth: '46px' }}
@@ -940,8 +939,8 @@ const MeetingRoom = () => {
             onClick={() => handleTogglePanel('chat')}
             className={`p-3.5 rounded-xl border transition-all duration-200 cursor-pointer shadow-sm flex items-center justify-center ${
               activePanel === 'chat' 
-              ? 'bg-(--text-main) border-(--text-main) text-(--secondary-bg)'
-              : 'bg-(--primary-bg) border-(--border-color) text-(--text-main) hover:bg-(--border-color)'
+              ? 'bg-text-main border-text-main text-secondary-bg'
+              : 'bg-primary-bg border-border-color text-text-main hover:bg-border-color'
             }`}
             title="Chat Panel"
             style={{ minHeight: '46px', minWidth: '46px' }}
@@ -954,8 +953,8 @@ const MeetingRoom = () => {
             onClick={() => handleTogglePanel('participants')}
             className={`p-3.5 rounded-xl border transition-all duration-200 cursor-pointer shadow-sm flex items-center justify-center ${
               activePanel === 'participants' 
-              ? 'bg-(--text-main) border-(--text-main) text-(--secondary-bg)'
-              : 'bg-(--primary-bg) border-(--border-color) text-(--text-main) hover:bg-(--border-color)'
+              ? 'bg-text-main border-text-main text-secondary-bg'
+              : 'bg-primary-bg border-border-color text-text-main hover:bg-border-color'
             }`}
             title="Participants List"
             style={{ minHeight: '46px', minWidth: '46px' }}

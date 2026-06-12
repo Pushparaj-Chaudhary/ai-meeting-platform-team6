@@ -39,68 +39,68 @@ const Register = () => {
   };
 
   return (
-    <div className="auth-container">
+    <div className="flex min-h-screen w-full bg-primary-bg">
       <ThemeToggle />
-      <div className="auth-left">
-        <div className="auth-left-content">
-          <div className="auth-brand">
+      <div className="hidden md:flex md:flex-col md:justify-center md:flex-[0_0_60%] p-12 bg-[radial-gradient(circle_at_0%_0%,var(--gradient-start)_0%,var(--gradient-end)_70%)] relative overflow-hidden">
+        <div className="relative z-10 max-w-[600px]">
+          <div className="flex items-center gap-3 text-2xl font-extrabold text-text-main mb-8 tracking-tight">
             <Video size={32} />
             <span>IntellMeet</span>
           </div>
           
-          <h1 className="auth-title">AI-Powered Enterprise Meeting & Collaboration Platform</h1>
-          <p className="auth-description">
+          <h1 className="text-4xl lg:text-[2.5rem] font-extrabold leading-tight mb-4 text-text-main tracking-tighter">AI-Powered Enterprise Meeting & Collaboration Platform</h1>
+          <p className="text-[1.05rem] text-text-muted mb-10 leading-relaxed">
             Real-time video meetings, AI summaries, smart action items, and team collaboration in one secure platform.
           </p>
 
-          <div className="auth-features">
-            <div className="feature-card">
-              <div className="feature-icon-wrapper">
+          <div className="grid gap-3">
+            <div className="flex items-center gap-4 bg-glass-bg border border-glass-border py-[0.85rem] px-5 rounded-2xl backdrop-blur-md transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:translate-x-2 hover:bg-feature-hover">
+              <div className="bg-border-color text-text-main p-2 rounded-xl flex items-center justify-center">
                 <Video size={24} />
               </div>
-              <span className="feature-text">Real-Time Video Meetings</span>
+              <span className="text-[0.95rem] font-semibold text-text-main">Real-Time Video Meetings</span>
             </div>
-            <div className="feature-card">
-              <div className="feature-icon-wrapper">
+            <div className="flex items-center gap-4 bg-glass-bg border border-glass-border py-[0.85rem] px-5 rounded-2xl backdrop-blur-md transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:translate-x-2 hover:bg-feature-hover">
+              <div className="bg-border-color text-text-main p-2 rounded-xl flex items-center justify-center">
                 <FileText size={24} />
               </div>
-              <span className="feature-text">AI Meeting Summaries</span>
+              <span className="text-[0.95rem] font-semibold text-text-main">AI Meeting Summaries</span>
             </div>
-            <div className="feature-card">
-              <div className="feature-icon-wrapper">
+            <div className="flex items-center gap-4 bg-glass-bg border border-glass-border py-[0.85rem] px-5 rounded-2xl backdrop-blur-md transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:translate-x-2 hover:bg-feature-hover">
+              <div className="bg-border-color text-text-main p-2 rounded-xl flex items-center justify-center">
                 <CheckSquare size={24} />
               </div>
-              <span className="feature-text">Smart Action Items</span>
+              <span className="text-[0.95rem] font-semibold text-text-main">Smart Action Items</span>
             </div>
-            <div className="feature-card">
-              <div className="feature-icon-wrapper">
+            <div className="flex items-center gap-4 bg-glass-bg border border-glass-border py-[0.85rem] px-5 rounded-2xl backdrop-blur-md transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:translate-x-2 hover:bg-feature-hover">
+              <div className="bg-border-color text-text-main p-2 rounded-xl flex items-center justify-center">
                 <MessageSquare size={24} />
               </div>
-              <span className="feature-text">Team Chat & Collaboration</span>
+              <span className="text-[0.95rem] font-semibold text-text-main">Team Chat & Collaboration</span>
             </div>
-            <div className="feature-card">
-              <div className="feature-icon-wrapper">
+            <div className="flex items-center gap-4 bg-glass-bg border border-glass-border py-[0.85rem] px-5 rounded-2xl backdrop-blur-md transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:translate-x-2 hover:bg-feature-hover">
+              <div className="bg-border-color text-text-main p-2 rounded-xl flex items-center justify-center">
                 <BarChart size={24} />
               </div>
-              <span className="feature-text">Meeting Analytics</span>
+              <span className="text-[0.95rem] font-semibold text-text-main">Meeting Analytics</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="auth-right">
-        <div className="auth-card">
-          <h1>{step === 1 ? 'Create Account' : 'Verify Email'}</h1>
-          <p className="subtitle">{step === 1 ? 'Join us to get started' : 'We sent a code to your email'}</p>
+      <div className="flex-[0_0_40%] w-full md:w-auto flex items-center justify-center p-4 md:p-8 bg-primary-bg relative">
+        <div className="bg-glass-bg backdrop-blur-[20px] border border-glass-border rounded-[28px] p-8 md:p-12 w-full max-w-[440px] shadow-card-shadow animate-slide-up">
+          <h1 className="text-3xl font-bold mb-1 text-center tracking-tight text-text-main">{step === 1 ? 'Create Account' : 'Verify Email'}</h1>
+          <p className="text-text-muted text-sm text-center mb-8">{step === 1 ? 'Join us to get started' : 'We sent a code to your email'}</p>
           
-          {error && <div className="error-message">{error}</div>}
+          {error && <div className="bg-red-500/8 text-error p-[0.85rem] rounded-[14px] text-sm mb-6 border border-red-500/15">{error}</div>}
           
           <form onSubmit={handleSubmit}>
             {step === 1 ? (
               <>
-                <div className="form-group">
-                  <label htmlFor="name">Full Name</label>
-                  <div className="input-icon-wrapper">
+                <div className="mb-5">
+                  <label htmlFor="name" className="block text-[0.85rem] font-semibold mb-2 text-text-muted uppercase tracking-wider">Full Name</label>
+                  <div className="relative flex items-center">
                     <input
                       type="text"
                       id="name"
@@ -108,14 +108,15 @@ const Register = () => {
                       onChange={(e) => setName(e.target.value)}
                       placeholder="John Doe"
                       required
+                      className="w-full py-[0.85rem] pr-4 pl-12 bg-input-bg border border-border-color rounded-[14px] text-text-main text-[0.95rem] transition-all duration-200 outline-none focus:border-text-main focus:ring-2 focus:ring-border-color peer"
                     />
-                    <User className="input-icon" size={20} />
+                    <User className="absolute left-[1.15rem] text-text-muted w-[1.15rem] h-[1.15rem] transition-colors duration-200 peer-focus:text-text-main" size={20} />
                   </div>
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="email">Email Address</label>
-                  <div className="input-icon-wrapper">
+                <div className="mb-5">
+                  <label htmlFor="email" className="block text-[0.85rem] font-semibold mb-2 text-text-muted uppercase tracking-wider">Email Address</label>
+                  <div className="relative flex items-center">
                     <input
                       type="email"
                       id="email"
@@ -123,14 +124,15 @@ const Register = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@example.com"
                       required
+                      className="w-full py-[0.85rem] pr-4 pl-12 bg-input-bg border border-border-color rounded-[14px] text-text-main text-[0.95rem] transition-all duration-200 outline-none focus:border-text-main focus:ring-2 focus:ring-border-color peer"
                     />
-                    <Mail className="input-icon" size={20} />
+                    <Mail className="absolute left-[1.15rem] text-text-muted w-[1.15rem] h-[1.15rem] transition-colors duration-200 peer-focus:text-text-main" size={20} />
                   </div>
                 </div>
                 
-                <div className="form-group">
-                  <label htmlFor="password">Password</label>
-                  <div className="input-icon-wrapper">
+                <div className="mb-5">
+                  <label htmlFor="password" className="block text-[0.85rem] font-semibold mb-2 text-text-muted uppercase tracking-wider">Password</label>
+                  <div className="relative flex items-center">
                     <input
                       type={showPassword ? "text" : "password"}
                       id="password"
@@ -138,11 +140,12 @@ const Register = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Min 8 chars, 1 letter, 1 number"
                       required
+                      className="w-full py-[0.85rem] pr-12 pl-12 bg-input-bg border border-border-color rounded-[14px] text-text-main text-[0.95rem] transition-all duration-200 outline-none focus:border-text-main focus:ring-2 focus:ring-border-color peer"
                     />
-                    <Lock className="input-icon" size={20} />
+                    <Lock className="absolute left-[1.15rem] text-text-muted w-[1.15rem] h-[1.15rem] transition-colors duration-200 peer-focus:text-text-main" size={20} />
                     <button 
                       type="button" 
-                      className="password-toggle"
+                      className="absolute right-[1.15rem] bg-transparent border-none text-text-muted hover:text-text-main cursor-pointer flex items-center justify-center p-1"
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -151,9 +154,9 @@ const Register = () => {
                 </div>
               </>
             ) : (
-              <div className="form-group">
-                <label htmlFor="otp">Verification Code</label>
-                <div className="input-icon-wrapper">
+              <div className="mb-5">
+                <label htmlFor="otp" className="block text-[0.85rem] font-semibold mb-2 text-text-muted uppercase tracking-wider">Verification Code</label>
+                <div className="relative flex items-center">
                   <input
                     type="text"
                     id="otp"
@@ -162,31 +165,32 @@ const Register = () => {
                     placeholder="123456"
                     maxLength={6}
                     required
+                    className="w-full py-[0.85rem] pr-4 pl-12 bg-input-bg border border-border-color rounded-[14px] text-text-main text-[0.95rem] transition-all duration-200 outline-none focus:border-text-main focus:ring-2 focus:ring-border-color peer"
                   />
-                  <KeyRound className="input-icon" size={20} />
+                  <KeyRound className="absolute left-[1.15rem] text-text-muted w-[1.15rem] h-[1.15rem] transition-colors duration-200 peer-focus:text-text-main" size={20} />
                 </div>
-                <p className="hint-text" style={{fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem'}}>Enter the 6-digit code sent to your email.</p>
+                <p className="text-xs text-text-muted mt-2">Enter the 6-digit code sent to your email.</p>
               </div>
             )}
             
-            <button type="submit" className="btn-primary" disabled={isLoading}>
+            <button type="submit" className="w-full py-[0.85rem] bg-accent-color text-primary-bg border-none rounded-[14px] text-[0.95rem] font-semibold cursor-pointer transition-all duration-200 hover:bg-accent-hover hover:-translate-y-px" disabled={isLoading}>
               {isLoading ? 'Processing...' : (step === 1 ? 'Sign Up' : 'Verify & Login')}
             </button>
           </form>
           
           {step === 1 ? (
-            <Link to="/login" className="auth-link">
-              Already have an account? <span>Sign in</span>
+            <Link to="/login" className="block text-center mt-6 text-text-muted text-sm no-underline hover:text-text-main">
+              Already have an account? <span className="text-text-main font-semibold underline">Sign in</span>
             </Link>
           ) : (
-            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+            <div className="text-center mt-4">
               <button 
                 type="button" 
                 onClick={() => { setStep(1); setOtp(''); }} 
-                className="auth-link"
-                style={{ background: 'transparent', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit' }}
+                className="block text-center mt-6 text-text-muted text-sm no-underline hover:text-text-main w-full"
+                style={{ background: 'transparent', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit' }}
               >
-                Need to change your email? <span>Go Back</span>
+                Need to change your email? <span className="text-text-main font-semibold underline">Go Back</span>
               </button>
             </div>
           )}

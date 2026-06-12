@@ -14,9 +14,9 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="navbar relative z-50 flex justify-between items-center px-4 sm:px-8 py-4 bg-(--glass-bg) border-b border-(--border-color) backdrop-blur-md">
-      <Link to="/" className="text-2xl font-bold text-(--text-main) no-underline flex items-center gap-2 hover:opacity-80 transition-opacity">
-        <Video className="text-(--accent-color)" size={28} />
+    <nav className="relative z-50 flex justify-between items-center px-4 sm:px-8 py-4 bg-glass-bg border-b border-border-color backdrop-blur-md">
+      <Link to="/" className="text-2xl font-bold text-text-main no-underline flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <Video className="text-accent-color" size={28} />
         IntellMeet
       </Link>
       
@@ -27,19 +27,19 @@ const Navbar = () => {
             to={link.path} 
             className={`font-medium transition-colors ${
               location.pathname.startsWith(link.path) 
-                ? 'text-(--accent-color)' 
-                : 'text-(--text-muted) hover:text-(--text-main)'
+                ? 'text-accent-color' 
+                : 'text-text-muted hover:text-text-main'
             }`}
           >
             {link.label}
           </Link>
         ))}
         
-        <div className="h-6 w-px bg-(--border-color) mx-2 hidden sm:block"></div>
+        <div className="h-6 w-px bg-border-color mx-2 hidden sm:block"></div>
         
         <button 
           onClick={logout} 
-          className="btn-logout text-sm font-semibold whitespace-nowrap"
+          className="text-text-muted hover:text-text-main transition-colors text-sm font-semibold whitespace-nowrap cursor-pointer"
         >
           Sign Out
         </button>
