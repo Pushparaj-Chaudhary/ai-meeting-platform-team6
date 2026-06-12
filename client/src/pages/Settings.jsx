@@ -104,8 +104,8 @@ const SettingsPage = () => {
     <div className="w-full max-w-5xl mx-auto space-y-6 animate-fade-in-up">
       {/* Header Title */}
       <div>
-        <h1 className="text-3xl font-extrabold text-(--text-main) tracking-tight">System Settings</h1>
-        <p className="text-(--text-muted) text-sm">Configure hardware inputs, custom notification criteria, and security.</p>
+        <h1 className="text-3xl font-extrabold text-text-main tracking-tight">System Settings</h1>
+        <p className="text-text-muted text-sm">Configure hardware inputs, custom notification criteria, and security.</p>
       </div>
 
       <form onSubmit={handleSaveSettings} className="space-y-6">
@@ -126,72 +126,72 @@ const SettingsPage = () => {
           <div className="lg:col-span-2 space-y-6">
             
             {/* Panel 1: Device Configuration */}
-            <div className="premium-card space-y-5">
-              <h3 className="text-lg font-bold text-(--text-main) border-b border-(--border-color) pb-3 flex items-center gap-2">
+            <div className="bg-secondary-bg border border-border-color rounded-3xl p-8 shadow-card-shadow space-y-5">
+              <h3 className="text-lg font-bold text-text-main border-b border-border-color pb-3 flex items-center gap-2">
                 <Mic size={18} />
                 <span>Audio & Video Hardware</span>
               </h3>
 
               <div className="space-y-4">
                 {/* Camera select */}
-                <div className="form-group m-0">
-                  <label className="block text-xs font-bold text-(--text-muted) mb-1.5 uppercase tracking-wider">Video Camera Device</label>
-                  <div className="input-icon-wrapper">
+                <div className="mb-5">
+                  <label className="block text-xs font-bold text-text-muted mb-1.5 uppercase tracking-wider">Video Camera Device</label>
+                  <div className="relative flex items-center">
                     <select
                       value={selectedCam}
                       onChange={(e) => setSelectedCam(e.target.value)}
-                      className="w-full bg-(--input-bg) border border-(--border-color) rounded-xl pl-10 pr-4 py-2.5 text-sm text-(--text-main) focus:outline-none focus:border-(--text-main) appearance-none cursor-pointer"
+                      className="w-full bg-input-bg border border-border-color rounded-xl pl-10 pr-4 py-2.5 text-sm text-text-main focus:outline-none focus:border-text-main appearance-none cursor-pointer peer focus:ring-1 focus:ring-text-main transition-all"
                       style={{ minHeight: '46px' }}
                     >
                       <option value="default">Default FaceTime Camera / Webcam</option>
                       <option value="cam-hd">Logitech StreamCam HD (USB-C)</option>
                       <option value="cam-virtual">OBS Virtual Camera Source</option>
                     </select>
-                    <Video className="input-icon" size={16} />
+                    <Video className="absolute left-[1.15rem] text-text-muted w-[1.15rem] h-[1.15rem] transition-colors duration-200 peer-focus:text-text-main pointer-events-none" size={16} />
                   </div>
                 </div>
 
                 {/* Mic select */}
-                <div className="form-group m-0">
-                  <label className="block text-xs font-bold text-(--text-muted) mb-1.5 uppercase tracking-wider">Microphone Input Device</label>
-                  <div className="input-icon-wrapper">
+                <div className="mb-5">
+                  <label className="block text-xs font-bold text-text-muted mb-1.5 uppercase tracking-wider">Microphone Input Device</label>
+                  <div className="relative flex items-center">
                     <select
                       value={selectedMic}
                       onChange={(e) => setSelectedMic(e.target.value)}
-                      className="w-full bg-(--input-bg) border border-(--border-color) rounded-xl pl-10 pr-4 py-2.5 text-sm text-(--text-main) focus:outline-none focus:border-(--text-main) appearance-none cursor-pointer"
+                      className="w-full bg-input-bg border border-border-color rounded-xl pl-10 pr-4 py-2.5 text-sm text-text-main focus:outline-none focus:border-text-main appearance-none cursor-pointer peer focus:ring-1 focus:ring-text-main transition-all"
                       style={{ minHeight: '46px' }}
                     >
                       <option value="default">Default System Audio Microphone</option>
                       <option value="mic-yeti">Yeti Stereo Microphone (USB)</option>
                       <option value="mic-pods">AirPods Pro Wireless Mic</option>
                     </select>
-                    <Mic className="input-icon" size={16} />
+                    <Mic className="absolute left-[1.15rem] text-text-muted w-[1.15rem] h-[1.15rem] transition-colors duration-200 peer-focus:text-text-main pointer-events-none" size={16} />
                   </div>
                 </div>
 
                 {/* Speaker select */}
-                <div className="form-group m-0">
-                  <label className="block text-xs font-bold text-(--text-muted) mb-1.5 uppercase tracking-wider">Speaker Output Device</label>
+                <div className="mb-5">
+                  <label className="block text-xs font-bold text-text-muted mb-1.5 uppercase tracking-wider">Speaker Output Device</label>
                   <div className="flex gap-3 items-stretch">
-                    <div className="input-icon-wrapper flex-1">
+                    <div className="relative flex items-center flex-1">
                       <select
                         value={selectedSpeaker}
                         onChange={(e) => setSelectedSpeaker(e.target.value)}
-                        className="w-full bg-(--input-bg) border border-(--border-color) rounded-xl pl-10 pr-4 py-2.5 text-sm text-(--text-main) focus:outline-none focus:border-(--text-main) appearance-none cursor-pointer"
+                        className="w-full bg-input-bg border border-border-color rounded-xl pl-10 pr-4 py-2.5 text-sm text-text-main focus:outline-none focus:border-text-main appearance-none cursor-pointer peer focus:ring-1 focus:ring-text-main transition-all"
                         style={{ minHeight: '46px' }}
                       >
                         <option value="default">Default Built-in Speakers</option>
                         <option value="speakers-line">External Speakers (Line Out)</option>
                         <option value="speakers-pods">AirPods Pro Stereo Output</option>
                       </select>
-                      <Volume2 className="input-icon" size={16} />
+                      <Volume2 className="absolute left-[1.15rem] text-text-muted w-[1.15rem] h-[1.15rem] transition-colors duration-200 peer-focus:text-text-main pointer-events-none" size={16} />
                     </div>
                     
                     <button
                       type="button"
                       onClick={handleTestSpeaker}
                       disabled={testPlaying}
-                      className="btn-glass px-4 flex items-center justify-center shrink-0"
+                      className="inline-flex items-center justify-center gap-2 bg-glass-bg border border-border-color text-text-main rounded-2xl font-semibold text-[0.95rem] px-4 py-3 transition-all duration-200 min-h-[46px] hover:bg-border-color hover:border-text-muted shrink-0"
                       style={{ minHeight: '46px' }}
                     >
                       {testPlaying ? 'Chiming...' : 'Test Sound'}
@@ -202,29 +202,29 @@ const SettingsPage = () => {
             </div>
 
             {/* Panel 2: Account Security */}
-            <div className="premium-card space-y-5">
-              <h3 className="text-lg font-bold text-(--text-main) border-b border-(--border-color) pb-3 flex items-center gap-2">
+            <div className="bg-secondary-bg border border-border-color rounded-3xl p-8 shadow-card-shadow space-y-5">
+              <h3 className="text-lg font-bold text-text-main border-b border-border-color pb-3 flex items-center gap-2">
                 <Lock size={18} />
                 <span>Security Settings</span>
               </h3>
 
               <div className="space-y-4">
                 {/* Current password */}
-                <div className="form-group m-0">
-                  <label className="block text-xs font-bold text-(--text-muted) mb-1.5 uppercase tracking-wider">Current Password</label>
-                  <div className="input-icon-wrapper">
+                <div className="mb-5">
+                  <label className="block text-xs font-bold text-text-muted mb-1.5 uppercase tracking-wider">Current Password</label>
+                  <div className="relative flex items-center">
                     <input
                       type={showPass ? 'text' : 'password'}
                       placeholder="••••••••"
                       value={passwords.current}
                       onChange={(e) => setPasswords({ ...passwords, current: e.target.value })}
-                      className="w-full bg-(--input-bg) border border-(--border-color) rounded-xl pl-10 pr-12 py-2.5 text-sm text-(--text-main) focus:outline-none focus:border-(--text-main) transition-all"
+                      className="w-full bg-input-bg border border-border-color rounded-xl pl-10 pr-12 py-2.5 text-sm text-text-main focus:outline-none focus:border-text-main transition-all peer focus:ring-1 focus:ring-text-main"
                     />
-                    <Lock className="input-icon" size={16} />
+                    <Lock className="absolute left-[1.15rem] text-text-muted w-[1.15rem] h-[1.15rem] transition-colors duration-200 peer-focus:text-text-main pointer-events-none" size={16} />
                     <button
                       type="button"
                       onClick={() => setShowPass(!showPass)}
-                      className="password-toggle"
+                      className="absolute right-[1.15rem] bg-transparent border-none text-text-muted hover:text-text-main cursor-pointer flex items-center justify-center p-1"
                     >
                       {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
@@ -233,32 +233,32 @@ const SettingsPage = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* New password */}
-                  <div className="form-group m-0">
-                    <label className="block text-xs font-bold text-(--text-muted) mb-1.5 uppercase tracking-wider">New Password</label>
-                    <div className="input-icon-wrapper">
+                  <div className="mb-5">
+                    <label className="block text-xs font-bold text-text-muted mb-1.5 uppercase tracking-wider">New Password</label>
+                    <div className="relative flex items-center">
                       <input
                         type={showPass ? 'text' : 'password'}
                         placeholder="Min 6 characters"
                         value={passwords.newPass}
                         onChange={(e) => setPasswords({ ...passwords, newPass: e.target.value })}
-                        className="w-full bg-(--input-bg) border border-(--border-color) rounded-xl pl-10 pr-4 py-2.5 text-sm text-(--text-main) focus:outline-none focus:border-(--text-main) transition-all"
+                        className="w-full bg-input-bg border border-border-color rounded-xl pl-10 pr-4 py-2.5 text-sm text-text-main focus:outline-none focus:border-text-main transition-all peer focus:ring-1 focus:ring-text-main"
                       />
-                      <Lock className="input-icon" size={16} />
+                      <Lock className="absolute left-[1.15rem] text-text-muted w-[1.15rem] h-[1.15rem] transition-colors duration-200 peer-focus:text-text-main pointer-events-none" size={16} />
                     </div>
                   </div>
 
                   {/* Confirm password */}
-                  <div className="form-group m-0">
-                    <label className="block text-xs font-bold text-(--text-muted) mb-1.5 uppercase tracking-wider">Confirm New Password</label>
-                    <div className="input-icon-wrapper">
+                  <div className="mb-5">
+                    <label className="block text-xs font-bold text-text-muted mb-1.5 uppercase tracking-wider">Confirm New Password</label>
+                    <div className="relative flex items-center">
                       <input
                         type={showPass ? 'text' : 'password'}
                         placeholder="Re-enter password"
                         value={passwords.confirm}
                         onChange={(e) => setPasswords({ ...passwords, confirm: e.target.value })}
-                        className="w-full bg-(--input-bg) border border-(--border-color) rounded-xl pl-10 pr-4 py-2.5 text-sm text-(--text-main) focus:outline-none focus:border-(--text-main) transition-all"
+                        className="w-full bg-input-bg border border-border-color rounded-xl pl-10 pr-4 py-2.5 text-sm text-text-main focus:outline-none focus:border-text-main transition-all peer focus:ring-1 focus:ring-text-main"
                       />
-                      <Lock className="input-icon" size={16} />
+                      <Lock className="absolute left-[1.15rem] text-text-muted w-[1.15rem] h-[1.15rem] transition-colors duration-200 peer-focus:text-text-main pointer-events-none" size={16} />
                     </div>
                   </div>
                 </div>
@@ -271,8 +271,8 @@ const SettingsPage = () => {
           <div className="space-y-6">
             
             {/* Panel 3: Quick Preferences */}
-            <div className="premium-card space-y-6">
-              <h3 className="text-lg font-bold text-(--text-main) border-b border-(--border-color) pb-3">
+            <div className="bg-secondary-bg border border-border-color rounded-3xl p-8 shadow-card-shadow space-y-6">
+              <h3 className="text-lg font-bold text-text-main border-b border-border-color pb-3">
                 Interface Customization
               </h3>
 
@@ -280,40 +280,50 @@ const SettingsPage = () => {
                 {/* Theme toggle switch */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="text-sm font-bold text-(--text-main)">Dark Appearance</h4>
-                    <p className="text-xs text-(--text-muted)">Toggle metallic color filters</p>
+                    <h4 className="text-sm font-bold text-text-main">Dark Appearance</h4>
+                    <p className="text-xs text-text-muted">Toggle metallic color filters</p>
                   </div>
-                  <label className="toggle-switch">
+                  <div className="relative inline-block w-12 h-[26px] shrink-0">
                     <input 
                       type="checkbox" 
                       checked={theme === 'dark'}
                       onChange={toggleTheme}
+                      className="sr-only peer"
+                      id="theme-dark-toggle"
                     />
-                    <span className="toggle-slider"></span>
-                  </label>
+                    <label 
+                      htmlFor="theme-dark-toggle"
+                      className="absolute cursor-pointer inset-0 bg-border-color border border-border-color rounded-full transition-colors duration-300 peer-checked:bg-toggle-on-bg peer-checked:border-toggle-on-bg after:content-[''] after:absolute after:h-[18px] after:w-[18px] after:left-[3px] after:bottom-[3px] after:bg-toggle-thumb after:rounded-full after:shadow-md after:transition-transform after:duration-300 peer-checked:after:translate-x-[22px]"
+                    />
+                  </div>
                 </div>
 
                 {/* Visual effects toggle switch */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="text-sm font-bold text-(--text-main)">Aesthetic Effects</h4>
-                    <p className="text-xs text-(--text-muted)">Smooth page transitions & animations</p>
+                    <h4 className="text-sm font-bold text-text-main">Aesthetic Effects</h4>
+                    <p className="text-xs text-text-muted">Smooth page transitions & animations</p>
                   </div>
-                  <label className="toggle-switch">
+                  <div className="relative inline-block w-12 h-[26px] shrink-0">
                     <input 
                       type="checkbox" 
                       checked={visualEffects}
                       onChange={(e) => setVisualEffects(e.target.checked)}
+                      className="sr-only peer"
+                      id="visual-effects-toggle"
                     />
-                    <span className="toggle-slider"></span>
-                  </label>
+                    <label 
+                      htmlFor="visual-effects-toggle"
+                      className="absolute cursor-pointer inset-0 bg-border-color border border-border-color rounded-full transition-colors duration-300 peer-checked:bg-toggle-on-bg peer-checked:border-toggle-on-bg after:content-[''] after:absolute after:h-[18px] after:w-[18px] after:left-[3px] after:bottom-[3px] after:bg-toggle-thumb after:rounded-full after:shadow-md after:transition-transform after:duration-300 peer-checked:after:translate-x-[22px]"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Panel 4: Notification Toggles */}
-            <div className="premium-card space-y-6">
-              <h3 className="text-lg font-bold text-(--text-main) border-b border-(--border-color) pb-3 flex items-center gap-2">
+            <div className="bg-secondary-bg border border-border-color rounded-3xl p-8 shadow-card-shadow space-y-6">
+              <h3 className="text-lg font-bold text-text-main border-b border-border-color pb-3 flex items-center gap-2">
                 <Bell size={18} />
                 <span>Alert Rules</span>
               </h3>
@@ -322,74 +332,94 @@ const SettingsPage = () => {
                 {/* Email summaries */}
                 <div className="flex items-center justify-between">
                   <div className="pr-4">
-                    <h4 className="text-sm font-bold text-(--text-main)">AI Transcripts via Email</h4>
-                    <p className="text-xs text-(--text-muted)">Get summaries automatically</p>
+                    <h4 className="text-sm font-bold text-text-main">AI Transcripts via Email</h4>
+                    <p className="text-xs text-text-muted">Get summaries automatically</p>
                   </div>
-                  <label className="toggle-switch">
+                  <div className="relative inline-block w-12 h-[26px] shrink-0">
                     <input 
                       type="checkbox" 
                       checked={emailTranscripts}
                       onChange={(e) => setEmailTranscripts(e.target.checked)}
+                      className="sr-only peer"
+                      id="email-transcripts-toggle"
                     />
-                    <span className="toggle-slider"></span>
-                  </label>
+                    <label 
+                      htmlFor="email-transcripts-toggle"
+                      className="absolute cursor-pointer inset-0 bg-border-color border border-border-color rounded-full transition-colors duration-300 peer-checked:bg-toggle-on-bg peer-checked:border-toggle-on-bg after:content-[''] after:absolute after:h-[18px] after:w-[18px] after:left-[3px] after:bottom-[3px] after:bg-toggle-thumb after:rounded-full after:shadow-md after:transition-transform after:duration-300 peer-checked:after:translate-x-[22px]"
+                    />
+                  </div>
                 </div>
 
                 {/* Desktop banners */}
                 <div className="flex items-center justify-between">
                   <div className="pr-4">
-                    <h4 className="text-sm font-bold text-(--text-main)">Push Notifications</h4>
-                    <p className="text-xs text-(--text-muted)">Real-time room alerts & mentions</p>
+                    <h4 className="text-sm font-bold text-text-main">Push Notifications</h4>
+                    <p className="text-xs text-text-muted">Real-time room alerts & mentions</p>
                   </div>
-                  <label className="toggle-switch">
+                  <div className="relative inline-block w-12 h-[26px] shrink-0">
                     <input 
                       type="checkbox" 
                       checked={desktopBanners}
                       onChange={(e) => setDesktopBanners(e.target.checked)}
+                      className="sr-only peer"
+                      id="desktop-banners-toggle"
                     />
-                    <span className="toggle-slider"></span>
-                  </label>
+                    <label 
+                      htmlFor="desktop-banners-toggle"
+                      className="absolute cursor-pointer inset-0 bg-border-color border border-border-color rounded-full transition-colors duration-300 peer-checked:bg-toggle-on-bg peer-checked:border-toggle-on-bg after:content-[''] after:absolute after:h-[18px] after:w-[18px] after:left-[3px] after:bottom-[3px] after:bg-toggle-thumb after:rounded-full after:shadow-md after:transition-transform after:duration-300 peer-checked:after:translate-x-[22px]"
+                    />
+                  </div>
                 </div>
 
                 {/* Sound alerts */}
                 <div className="flex items-center justify-between">
                   <div className="pr-4">
-                    <h4 className="text-sm font-bold text-(--text-main)">Sound Effects</h4>
-                    <p className="text-xs text-(--text-muted)">Chime on user entry/exit</p>
+                    <h4 className="text-sm font-bold text-text-main">Sound Effects</h4>
+                    <p className="text-xs text-text-muted">Chime on user entry/exit</p>
                   </div>
-                  <label className="toggle-switch">
+                  <div className="relative inline-block w-12 h-[26px] shrink-0">
                     <input 
                       type="checkbox" 
                       checked={soundEffects}
                       onChange={(e) => setSoundEffects(e.target.checked)}
+                      className="sr-only peer"
+                      id="sound-effects-toggle"
                     />
-                    <span className="toggle-slider"></span>
-                  </label>
+                    <label 
+                      htmlFor="sound-effects-toggle"
+                      className="absolute cursor-pointer inset-0 bg-border-color border border-border-color rounded-full transition-colors duration-300 peer-checked:bg-toggle-on-bg peer-checked:border-toggle-on-bg after:content-[''] after:absolute after:h-[18px] after:w-[18px] after:left-[3px] after:bottom-[3px] after:bg-toggle-thumb after:rounded-full after:shadow-md after:transition-transform after:duration-300 peer-checked:after:translate-x-[22px]"
+                    />
+                  </div>
                 </div>
 
                 {/* Weekly summaries */}
                 <div className="flex items-center justify-between">
                   <div className="pr-4">
-                    <h4 className="text-sm font-bold text-(--text-main)">Weekly AI Recap</h4>
-                    <p className="text-xs text-(--text-muted)">Digest of tasks & productivity metrics</p>
+                    <h4 className="text-sm font-bold text-text-main">Weekly AI Recap</h4>
+                    <p className="text-xs text-text-muted">Digest of tasks & productivity metrics</p>
                   </div>
-                  <label className="toggle-switch">
+                  <div className="relative inline-block w-12 h-[26px] shrink-0">
                     <input 
                       type="checkbox" 
                       checked={weeklySummaries}
                       onChange={(e) => setWeeklySummaries(e.target.checked)}
+                      className="sr-only peer"
+                      id="weekly-summaries-toggle"
                     />
-                    <span className="toggle-slider"></span>
-                  </label>
+                    <label 
+                      htmlFor="weekly-summaries-toggle"
+                      className="absolute cursor-pointer inset-0 bg-border-color border border-border-color rounded-full transition-colors duration-300 peer-checked:bg-toggle-on-bg peer-checked:border-toggle-on-bg after:content-[''] after:absolute after:h-[18px] after:w-[18px] after:left-[3px] after:bottom-[3px] after:bg-toggle-thumb after:rounded-full after:shadow-md after:transition-transform after:duration-300 peer-checked:after:translate-x-[22px]"
+                    />
+                  </div>
                 </div>
 
                 {/* Reminder timings */}
-                <div className="form-group border-t border-(--border-color) pt-3 m-0">
-                  <label className="block text-xs font-semibold text-(--text-muted) mb-1.5 uppercase tracking-wider">Alert Timing Before Meetings</label>
+                <div className="m-0 border-t border-border-color pt-3">
+                  <label className="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wider">Alert Timing Before Meetings</label>
                   <select
                     value={reminderMinutes}
                     onChange={(e) => setReminderMinutes(Number(e.target.value))}
-                    className="w-full bg-(--input-bg) border border-(--border-color) rounded-xl px-3 py-2 text-xs text-(--text-main) focus:outline-none focus:border-(--text-main) appearance-none cursor-pointer"
+                    className="w-full bg-input-bg border border-border-color rounded-xl px-3 py-2 text-xs text-text-main focus:outline-none focus:border-text-main appearance-none cursor-pointer"
                     style={{ minHeight: '38px' }}
                   >
                     <option value={0}>On scheduled time</option>
@@ -405,7 +435,7 @@ const SettingsPage = () => {
             {/* Quick Actions save button */}
             <button
               type="submit"
-              className="btn-metallic w-full py-3 flex items-center justify-center gap-2"
+              className="w-full inline-flex items-center justify-center gap-2 bg-linear-to-br from-[#3f3f46] to-[#18181b] dark:from-[#f4f4f5] dark:to-[#a1a1aa] text-white dark:text-zinc-950 rounded-2xl font-semibold text-[0.95rem] px-7 py-3 relative overflow-hidden transition-all duration-300 shadow-md min-h-[46px] hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 before:content-[''] before:absolute before:top-0 before:left-[-150%] before:w-full before:h-full before:bg-[linear-gradient(90deg,transparent,var(--shimmer-color),transparent)] before:transition-all before:duration-700 hover:before:left-[150%] cursor-pointer"
               style={{ minHeight: '46px' }}
             >
               <span>Save System Settings</span>

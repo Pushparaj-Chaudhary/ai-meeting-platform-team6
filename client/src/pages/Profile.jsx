@@ -142,8 +142,8 @@ const Profile = () => {
     <div className="w-full max-w-5xl mx-auto space-y-6 animate-fade-in-up">
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-extrabold text-(--text-main) tracking-tight">User Profile</h1>
-        <p className="text-(--text-muted) text-sm">Configure your personal information, credentials, and notifications.</p>
+        <h1 className="text-3xl font-extrabold text-text-main tracking-tight">User Profile</h1>
+        <p className="text-text-muted text-sm">Configure your personal information, credentials, and notifications.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -163,15 +163,15 @@ const Profile = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Account Details Box */}
-          <div className="lg:col-span-2 premium-card">
-            <h3 className="text-lg font-bold text-(--text-main) border-b border-(--border-color) pb-3 mb-6">
+          <div className="lg:col-span-2 bg-secondary-bg border border-border-color rounded-3xl p-8 shadow-card-shadow">
+            <h3 className="text-lg font-bold text-text-main border-b border-border-color pb-3 mb-6">
               Account Details
             </h3>
 
             <div className="flex flex-col md:flex-row gap-8">
               {/* Left Column: Avatar display and Update btn */}
               <div className="flex flex-col items-center gap-3 shrink-0">
-                <div className="relative w-36 h-36 rounded-full overflow-hidden bg-(--primary-bg) border-2 border-(--border-color) group">
+                <div className="relative w-36 h-36 rounded-full overflow-hidden bg-primary-bg border-2 border-border-color group">
                   {(preview || profile.avatar || user?.avatar) ? (
                     <img 
                       src={preview || profile.avatar || user?.avatar} 
@@ -179,7 +179,7 @@ const Profile = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-(--text-muted) bg-(--border-color) font-extrabold text-4xl">
+                    <div className="w-full h-full flex items-center justify-center text-text-muted bg-border-color font-extrabold text-4xl">
                       {user?.name?.charAt(0).toUpperCase() || 'U'}
                     </div>
                   )}
@@ -195,7 +195,7 @@ const Profile = () => {
                   </label>
                 </div>
                 
-                <label className="btn-glass py-1.5 px-4 text-xs cursor-pointer">
+                <label className="inline-flex items-center justify-center gap-2 bg-glass-bg border border-border-color text-text-main rounded-2xl font-semibold text-xs px-4 py-1.5 transition-all duration-200 hover:bg-border-color hover:border-text-muted cursor-pointer">
                   Update
                   <input 
                     type="file" 
@@ -209,9 +209,9 @@ const Profile = () => {
               {/* Right Column: Inputs */}
               <div className="flex-1 space-y-4">
                 {/* Full Name */}
-                <div className="form-group m-0">
-                  <label className="block text-xs font-bold text-(--text-muted) mb-1.5">Full Name</label>
-                  <div className="input-icon-wrapper">
+                <div className="m-0 mb-5">
+                  <label className="block text-xs font-bold text-text-muted mb-1.5">Full Name</label>
+                  <div className="relative flex items-center">
                     <input 
                       type="text"
                       name="fullName"
@@ -219,39 +219,39 @@ const Profile = () => {
                       onChange={handleInputChange}
                       required
                       placeholder="e.g. Alex Martinez"
-                      className="w-full bg-(--input-bg) border border-(--border-color) rounded-xl pl-10 pr-4 py-2.5 text-sm text-(--text-main) focus:outline-none focus:border-(--text-main) transition-all"
+                      className="w-full bg-input-bg border border-border-color rounded-xl pl-10 pr-4 py-2.5 text-sm text-text-main focus:outline-none focus:border-text-main transition-all peer"
                     />
-                    <User className="input-icon" size={16} />
+                    <User className="absolute left-[1.15rem] text-text-muted w-[1.15rem] h-[1.15rem] transition-colors duration-200 peer-focus:text-text-main" size={16} />
                   </div>
                 </div>
 
                 {/* Email Address (Disabled/Read-only) */}
-                <div className="form-group m-0 opacity-70">
-                  <label className="block text-xs font-bold text-(--text-muted) mb-1.5">Email Address</label>
-                  <div className="input-icon-wrapper">
+                <div className="m-0 mb-5 opacity-70">
+                  <label className="block text-xs font-bold text-text-muted mb-1.5">Email Address</label>
+                  <div className="relative flex items-center">
                     <input 
                       type="email"
                       readOnly
                       value={user?.email || 'alex@synapse.ai'}
-                      className="w-full bg-(--input-bg) border border-(--border-color) rounded-xl pl-10 pr-4 py-2.5 text-sm text-(--text-main) cursor-not-allowed focus:outline-none"
+                      className="w-full bg-input-bg border border-border-color rounded-xl pl-10 pr-4 py-2.5 text-sm text-text-main cursor-not-allowed focus:outline-none"
                     />
-                    <Mail className="input-icon" size={16} />
+                    <Mail className="absolute left-[1.15rem] text-text-muted w-[1.15rem] h-[1.15rem] transition-colors duration-200 peer-focus:text-text-main" size={16} />
                   </div>
                 </div>
 
                 {/* Company / Organization */}
-                <div className="form-group m-0">
-                  <label className="block text-xs font-bold text-(--text-muted) mb-1.5">Organization</label>
-                  <div className="input-icon-wrapper">
+                <div className="m-0 mb-5">
+                  <label className="block text-xs font-bold text-text-muted mb-1.5">Organization</label>
+                  <div className="relative flex items-center">
                     <input 
                       type="text"
                       name="company"
                       value={profile.company}
                       onChange={handleInputChange}
                       placeholder="e.g. Synapse AI"
-                      className="w-full bg-(--input-bg) border border-(--border-color) rounded-xl pl-10 pr-4 py-2.5 text-sm text-(--text-main) focus:outline-none focus:border-(--text-main) transition-all"
+                      className="w-full bg-input-bg border border-border-color rounded-xl pl-10 pr-4 py-2.5 text-sm text-text-main focus:outline-none focus:border-text-main transition-all peer"
                     />
-                    <Briefcase className="input-icon" size={16} />
+                    <Briefcase className="absolute left-[1.15rem] text-text-muted w-[1.15rem] h-[1.15rem] transition-colors duration-200 peer-focus:text-text-main" size={16} />
                   </div>
                 </div>
               </div>
@@ -259,9 +259,9 @@ const Profile = () => {
           </div>
 
           {/* Preferences Box */}
-          <div className="lg:col-span-1 premium-card flex flex-col justify-between">
+          <div className="lg:col-span-1 bg-secondary-bg border border-border-color rounded-3xl p-8 shadow-card-shadow flex flex-col justify-between">
             <div>
-              <h3 className="text-lg font-bold text-(--text-main) border-b border-(--border-color) pb-3 mb-6">
+              <h3 className="text-lg font-bold text-text-main border-b border-border-color pb-3 mb-6">
                 Preferences
               </h3>
 
@@ -269,33 +269,43 @@ const Profile = () => {
                 {/* Preference 1 */}
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <h4 className="text-sm font-bold text-(--text-main)">Email Notifications</h4>
-                    <p className="text-xs text-(--text-muted)">Toggles smooth animations</p>
+                    <h4 className="text-sm font-bold text-text-main">Email Notifications</h4>
+                    <p className="text-xs text-text-muted">Toggles smooth animations</p>
                   </div>
-                  <label className="toggle-switch">
+                  <div className="relative inline-block w-12 h-[26px] shrink-0">
                     <input 
                       type="checkbox" 
                       checked={emailNotifications}
                       onChange={(e) => setEmailNotifications(e.target.checked)}
+                      className="sr-only peer"
+                      id="email-notif-toggle"
                     />
-                    <span className="toggle-slider"></span>
-                  </label>
+                    <label 
+                      htmlFor="email-notif-toggle"
+                      className="absolute cursor-pointer inset-0 bg-border-color border border-border-color rounded-full transition-colors duration-300 peer-checked:bg-toggle-on-bg peer-checked:border-toggle-on-bg after:content-[''] after:absolute after:h-[18px] after:w-[18px] after:left-[3px] after:bottom-[3px] after:bg-toggle-thumb after:rounded-full after:shadow-md after:transition-transform after:duration-300 peer-checked:after:translate-x-[22px]"
+                    />
+                  </div>
                 </div>
 
                 {/* Preference 2 */}
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <h4 className="text-sm font-bold text-(--text-main)">Real-time Transcription</h4>
-                    <p className="text-xs text-(--text-muted)">Toggles real-time transcription</p>
+                    <h4 className="text-sm font-bold text-text-main">Real-time Transcription</h4>
+                    <p className="text-xs text-text-muted">Toggles real-time transcription</p>
                   </div>
-                  <label className="toggle-switch">
+                  <div className="relative inline-block w-12 h-[26px] shrink-0">
                     <input 
                       type="checkbox" 
                       checked={realtimeTranscription}
                       onChange={(e) => setRealtimeTranscription(e.target.checked)}
+                      className="sr-only peer"
+                      id="realtime-trans-toggle"
                     />
-                    <span className="toggle-slider"></span>
-                  </label>
+                    <label 
+                      htmlFor="realtime-trans-toggle"
+                      className="absolute cursor-pointer inset-0 bg-border-color border border-border-color rounded-full transition-colors duration-300 peer-checked:bg-toggle-on-bg peer-checked:border-toggle-on-bg after:content-[''] after:absolute after:h-[18px] after:w-[18px] after:left-[3px] after:bottom-[3px] after:bg-toggle-thumb after:rounded-full after:shadow-md after:transition-transform after:duration-300 peer-checked:after:translate-x-[22px]"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -303,11 +313,11 @@ const Profile = () => {
         </div>
 
         {/* Form Actions bar */}
-        <div className="flex justify-end pt-4 border-t border-(--border-color)">
+        <div className="flex justify-end pt-4 border-t border-border-color">
           <button 
             type="submit"
             disabled={loading}
-            className="btn-metallic py-3 px-8 flex items-center gap-2"
+            className="inline-flex items-center justify-center gap-2 bg-linear-to-br from-[#3f3f46] to-[#18181b] dark:from-[#f4f4f5] dark:to-[#a1a1aa] text-white dark:text-zinc-950 rounded-2xl font-semibold text-[0.95rem] px-8 py-3 relative overflow-hidden transition-all duration-300 shadow-md min-h-[46px] hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 before:content-[''] before:absolute before:top-0 before:left-[-150%] before:w-full before:h-full before:bg-[linear-gradient(90deg,transparent,var(--shimmer-color),transparent)] before:transition-all before:duration-700 hover:before:left-[150%] cursor-pointer"
           >
             {loading ? (
               <span>Saving...</span>

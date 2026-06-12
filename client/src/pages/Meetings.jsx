@@ -108,50 +108,46 @@ const Meetings = () => {
       {/* Meetings Top Header */}
       <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-(--text-main) tracking-tight">My Meetings</h1>
-          <p className="text-(--text-muted) text-sm">Manage meetings, start conversations, and access history.</p>
+          <h1 className="text-3xl font-extrabold text-text-main tracking-tight">My Meetings</h1>
+          <p className="text-text-muted text-sm">Manage meetings, start conversations, and access history.</p>
         </div>
         
         {/* Search, Filter & New Meeting Controls */}
         <div className="flex flex-wrap items-center gap-4 w-full xl:w-auto">
-          {/* Quick Join form */}
           <form onSubmit={handleJoinByCode} className="flex items-stretch w-full sm:w-auto shrink-0">
             <input
               type="text"
               placeholder="Enter Room Code"
               value={joinCode}
               onChange={(e) => setJoinCode(e.target.value)}
-              className="bg-(--input-bg) border border-(--border-color) px-4 text-sm text-(--text-main) focus:outline-none focus:border-(--text-main) w-full sm:w-44"
-              style={{ borderRadius: '14px 0 0 14px', borderRight: 'none', minHeight: '46px' }}
+              className="bg-input-bg border border-border-color px-4 text-sm text-text-main focus:outline-none focus:border-text-main w-full sm:w-44 focus:ring-1 focus:ring-text-main transition-all rounded-r-none! border-r-0!"
             />
             <button 
               type="submit" 
-              className="bg-(--border-color) hover:bg-(--text-muted) hover:text-(--secondary-bg) px-5 text-sm font-semibold transition-all cursor-pointer shrink-0 flex items-center justify-center"
-              style={{ borderRadius: '0 14px 14px 0', border: '1px solid var(--border-color)', borderLeft: 'none', minHeight: '46px' }}
+              className="bg-border-color hover:bg-text-muted hover:text-secondary-bg px-5 text-sm font-semibold transition-all cursor-pointer shrink-0 flex items-center justify-center text-text-main border border-border-color border-l-0 rounded-r-[14px] min-h-[46px]"
             >
               Join
             </button>
           </form>
 
           {/* Search Input */}
-          <div className="input-icon-wrapper flex-1 sm:flex-initial shrink-0">
+          <div className="relative flex items-center flex-1 sm:flex-initial shrink-0">
             <input 
               type="text"
               placeholder="Search title or code..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-(--input-bg) border border-(--border-color) rounded-xl pr-4 text-sm text-(--text-main) focus:outline-none focus:border-(--text-main) w-full sm:w-48"
-              style={{ minHeight: '46px' }}
+              className="bg-input-bg border border-border-color rounded-xl pr-4 pl-10 text-sm text-text-main focus:outline-none focus:border-text-main w-full sm:w-48 focus:ring-1 focus:ring-text-main transition-all"
             />
-            <Search className="input-icon" size={16} />
+            <Search className="absolute left-[0.95rem] top-1/2 -translate-y-1/2 text-text-muted" size={16} />
           </div>
 
           {/* Filter Dropdown */}
-          <div className="input-right-icon-wrapper shrink-0">
+          <div className="relative flex items-center shrink-0">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-(--input-bg) border border-(--border-color) rounded-xl pl-4 text-sm text-(--text-main) focus:outline-none focus:border-(--text-main) appearance-none cursor-pointer"
+              className="bg-input-bg border border-border-color rounded-xl pl-4 pr-10 text-sm text-text-main focus:outline-none focus:border-text-main appearance-none cursor-pointer focus:ring-1 focus:ring-text-main transition-all"
               style={{ minHeight: '46px' }}
             >
               <option value="all">All Status</option>
@@ -159,10 +155,10 @@ const Meetings = () => {
               <option value="active">Active</option>
               <option value="ended">Ended</option>
             </select>
-            <Filter className="input-icon" size={14} />
+            <Filter className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" size={14} />
           </div>
 
-          <Link to="/create" className="btn-metallic shrink-0" style={{ minHeight: '46px' }}>
+          <Link to="/create" className="inline-flex items-center justify-center gap-2 bg-linear-to-br from-[#3f3f46] to-[#18181b] dark:from-[#f4f4f5] dark:to-[#a1a1aa] text-white dark:text-zinc-950 rounded-2xl font-semibold text-[0.95rem] px-7 py-3 relative overflow-hidden transition-all duration-300 shadow-md min-h-[46px] hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 before:content-[''] before:absolute before:top-0 before:left-[-150%] before:w-full before:h-full before:bg-[linear-gradient(90deg,transparent,var(--shimmer-color),transparent)] before:transition-all before:duration-700 hover:before:left-[150%] cursor-pointer shrink-0" style={{ minHeight: '46px' }}>
             <Plus size={16} />
             <span>New Meeting</span>
           </Link>
@@ -175,14 +171,14 @@ const Meetings = () => {
         {/* Left Column: Meetings list */}
         <div className="lg:col-span-2 space-y-4 max-h-[70vh] overflow-y-auto pr-2">
           {loading ? (
-            <div className="flex justify-center items-center py-20 bg-(--secondary-bg) border border-(--border-color) rounded-2xl">
-              <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-(--text-main)"></div>
+            <div className="flex justify-center items-center py-20 bg-secondary-bg border border-border-color rounded-2xl">
+              <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-text-main"></div>
             </div>
           ) : filteredMeetings.length === 0 ? (
-            <div className="text-center py-20 bg-(--secondary-bg) border border-(--border-color) rounded-2xl shadow-sm">
-              <Calendar size={48} className="mx-auto text-(--text-muted) mb-3 opacity-60" />
-              <h3 className="text-lg font-bold text-(--text-main)">No meetings found</h3>
-              <p className="text-sm text-(--text-muted) mt-1">Try relaxing your filters or create a new meeting to start.</p>
+            <div className="text-center py-20 bg-secondary-bg border border-border-color rounded-2xl shadow-sm">
+              <Calendar size={48} className="mx-auto text-text-muted mb-3 opacity-60" />
+              <h3 className="text-lg font-bold text-text-main">No meetings found</h3>
+              <p className="text-sm text-text-muted mt-1">Try relaxing your filters or create a new meeting to start.</p>
             </div>
           ) : (
             filteredMeetings.map((meeting) => {
@@ -194,25 +190,31 @@ const Meetings = () => {
                 <div 
                   key={mId} 
                   onClick={() => setSelectedMeeting(meeting)}
-                  className={`p-5 bg-(--secondary-bg) border rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all cursor-pointer ${
+                  className={`p-5 bg-secondary-bg border rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all cursor-pointer ${
                     isSelected 
-                      ? 'border-(--text-main) bg-(--sidebar-active-bg) shadow-md' 
-                      : 'border-(--border-color) hover:border-(--text-muted)'
+                      ? 'border-text-main bg-sidebar-active-bg shadow-md' 
+                      : 'border-border-color hover:border-text-muted'
                   }`}
                 >
                   <div className="space-y-2 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className={`status-pill ${meeting.status === 'scheduled' ? 'upcoming' : meeting.status}`}>
+                      <span className={`inline-flex items-center px-3 py-1 text-[10px] font-bold uppercase rounded-full border ${
+                        meeting.status === 'scheduled' 
+                          ? 'bg-zinc-200/40 text-text-main border-border-color' 
+                          : meeting.status === 'active'
+                            ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+                            : 'bg-zinc-500/10 text-text-muted border-zinc-500/15'
+                      }`}>
                         {meeting.status === 'scheduled' ? 'Upcoming' : meeting.status}
                       </span>
-                      <span className="text-xs font-mono px-2 py-0.5 bg-(--primary-bg) border border-(--border-color) text-(--text-muted) rounded">
+                      <span className="text-xs font-mono px-2 py-0.5 bg-primary-bg border border-border-color text-text-muted rounded">
                         {meeting.meetingCode}
                       </span>
                     </div>
 
-                    <h3 className="text-lg font-bold text-(--text-main) tracking-tight">{meeting.title}</h3>
+                    <h3 className="text-lg font-bold text-text-main tracking-tight">{meeting.title}</h3>
                     
-                    <div className="flex items-center gap-4 text-xs text-(--text-muted) flex-wrap">
+                    <div className="flex items-center gap-4 text-xs text-text-muted flex-wrap">
                       <span className="flex items-center gap-1">
                         <Clock size={12} />
                         {meeting.scheduledTime 
@@ -243,10 +245,10 @@ const Meetings = () => {
                       disabled={meeting.status === 'ended'}
                       className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
                         meeting.status === 'ended' 
-                          ? 'bg-(--primary-bg) text-(--text-muted) border border-(--border-color) cursor-not-allowed'
+                          ? 'bg-primary-bg text-text-muted border border-border-color cursor-not-allowed'
                           : meeting.status === 'active' 
                             ? 'bg-green-600 hover:bg-green-700 text-white font-bold'
-                            : 'btn-glass py-2'
+                            : 'inline-flex items-center justify-center gap-2 bg-glass-bg border border-border-color text-text-main rounded-2xl font-semibold text-[0.95rem] px-6 py-2 transition-all duration-200 min-h-[46px] hover:bg-border-color hover:border-text-muted'
                       }`}
                     >
                       {meeting.status === 'ended' ? 'Ended' : meeting.status === 'active' ? 'Join Now' : (isHost ? 'Start' : 'Join')}
@@ -258,7 +260,7 @@ const Meetings = () => {
                           e.stopPropagation();
                           handleDeleteMeeting(mId);
                         }}
-                        className="p-2.5 text-(--text-muted) hover:text-red-500 hover:bg-red-500/10 border border-transparent rounded-xl transition-all cursor-pointer"
+                        className="p-2.5 text-text-muted hover:text-red-500 hover:bg-red-500/10 border border-transparent rounded-xl transition-all cursor-pointer"
                         title="Delete Meeting"
                       >
                         <Trash2 size={16} />
@@ -274,30 +276,36 @@ const Meetings = () => {
         {/* Right Column: Selected Meeting Details / Calendar Empty State */}
         <div className="lg:col-span-1">
           {selectedMeeting ? (
-            <div className="premium-card space-y-6">
-              <div className="border-b border-(--border-color) pb-4">
-                <span className={`status-pill mb-2 ${selectedMeeting.status === 'scheduled' ? 'upcoming' : selectedMeeting.status}`}>
+            <div className="bg-secondary-bg border border-border-color rounded-3xl p-8 shadow-card-shadow space-y-6">
+              <div className="border-b border-border-color pb-4">
+                <span className={`inline-flex items-center px-3 py-1 text-[10px] font-bold uppercase rounded-full border mb-2 ${
+                  selectedMeeting.status === 'scheduled' 
+                    ? 'bg-zinc-200/40 text-text-main border-border-color' 
+                    : selectedMeeting.status === 'active'
+                      ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+                      : 'bg-zinc-500/10 text-text-muted border-zinc-500/15'
+                }`}>
                   {selectedMeeting.status === 'scheduled' ? 'Upcoming' : selectedMeeting.status}
                 </span>
-                <h2 className="text-xl font-bold text-(--text-main) tracking-tight mt-1">{selectedMeeting.title}</h2>
-                <p className="text-xs font-mono text-(--text-muted) mt-1 bg-(--primary-bg) inline-block px-2.5 py-1 rounded border border-(--border-color)">
+                <h2 className="text-xl font-bold text-text-main tracking-tight mt-1">{selectedMeeting.title}</h2>
+                <p className="text-xs font-mono text-text-muted mt-1 bg-primary-bg inline-block px-2.5 py-1 rounded border border-border-color">
                   Code: {selectedMeeting.meetingCode}
                 </p>
               </div>
 
               {/* Description */}
               <div className="space-y-2">
-                <h4 className="text-xs font-bold text-(--text-muted) uppercase tracking-wider">Description</h4>
-                <p className="text-sm text-(--text-main) leading-relaxed">
+                <h4 className="text-xs font-bold text-text-muted uppercase tracking-wider">Description</h4>
+                <p className="text-sm text-text-main leading-relaxed">
                   {selectedMeeting.description || 'No description provided for this meeting.'}
                 </p>
               </div>
 
               {/* Time Details */}
-              <div className="grid grid-cols-2 gap-4 border-t border-b border-(--border-color) py-4">
+              <div className="grid grid-cols-2 gap-4 border-t border-b border-border-color py-4">
                 <div className="space-y-1">
-                  <span className="text-[10px] font-bold text-(--text-muted) uppercase tracking-wider">Scheduled Date</span>
-                  <p className="text-sm font-semibold text-(--text-main)">
+                  <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Scheduled Date</span>
+                  <p className="text-sm font-semibold text-text-main">
                     {selectedMeeting.scheduledTime 
                       ? new Date(selectedMeeting.scheduledTime).toLocaleDateString(undefined, {dateStyle: 'medium'})
                       : 'Instant Room'
@@ -305,8 +313,8 @@ const Meetings = () => {
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[10px] font-bold text-(--text-muted) uppercase tracking-wider">Scheduled Time</span>
-                  <p className="text-sm font-semibold text-(--text-main)">
+                  <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Scheduled Time</span>
+                  <p className="text-sm font-semibold text-text-main">
                     {selectedMeeting.scheduledTime 
                       ? new Date(selectedMeeting.scheduledTime).toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit'})
                       : 'Anytime'
@@ -317,20 +325,20 @@ const Meetings = () => {
 
               {/* Host info */}
               <div className="space-y-2">
-                <h4 className="text-xs font-bold text-(--text-muted) uppercase tracking-wider">Host Details</h4>
+                <h4 className="text-xs font-bold text-text-muted uppercase tracking-wider">Host Details</h4>
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-(--border-color) flex items-center justify-center font-bold text-(--text-main) text-xs">
+                  <div className="w-8 h-8 rounded-full bg-border-color flex items-center justify-center font-bold text-text-main text-xs">
                     {selectedMeeting.host?.name?.charAt(0).toUpperCase() || 'H'}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-(--text-main)">{selectedMeeting.host?.name || 'You'}</p>
-                    <p className="text-xs text-(--text-muted)">{selectedMeeting.host?.email || 'Host user'}</p>
+                    <p className="text-sm font-semibold text-text-main">{selectedMeeting.host?.name || 'You'}</p>
+                    <p className="text-xs text-text-muted">{selectedMeeting.host?.email || 'Host user'}</p>
                   </div>
                 </div>
               </div>
 
               {/* Control Buttons */}
-              <div className="space-y-3 pt-4 border-t border-(--border-color)">
+              <div className="space-y-3 pt-4 border-t border-border-color">
                 {selectedMeeting.status !== 'ended' ? (
                   <>
                     <button
@@ -343,7 +351,7 @@ const Meetings = () => {
                           navigate(`/meeting-room/${mId}`);
                         }
                       }}
-                      className="btn-metallic w-full"
+                      className="inline-flex items-center justify-center gap-2 bg-linear-to-br from-[#3f3f46] to-[#18181b] dark:from-[#f4f4f5] dark:to-[#a1a1aa] text-white dark:text-zinc-950 rounded-2xl font-semibold text-[0.95rem] px-7 py-3 relative overflow-hidden transition-all duration-300 shadow-md min-h-[46px] hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 before:content-[''] before:absolute before:top-0 before:left-[-150%] before:w-full before:h-full before:bg-[linear-gradient(90deg,transparent,var(--shimmer-color),transparent)] before:transition-all before:duration-700 hover:before:left-[150%] cursor-pointer w-full"
                     >
                       <PlayCircle size={18} />
                       <span>
@@ -361,7 +369,7 @@ const Meetings = () => {
                     {selectedMeeting.status === 'active' && (selectedMeeting.host?._id === user?.id || selectedMeeting.host?.id === user?.id || selectedMeeting.host === user?.id) && (
                       <button
                         onClick={() => handleEndMeeting(selectedMeeting.id || selectedMeeting._id)}
-                        className="btn-glass w-full text-red-500 border-red-500/20 hover:bg-red-500/10 justify-center"
+                        className="w-full inline-flex items-center justify-center gap-2 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-500 rounded-2xl font-semibold text-[0.95rem] px-6 py-3 transition-all duration-200 min-h-[46px] cursor-pointer"
                       >
                         <StopCircle size={18} />
                         <span>End Meeting</span>
@@ -369,7 +377,7 @@ const Meetings = () => {
                     )}
                   </>
                 ) : (
-                  <div className="p-3 text-center text-sm font-semibold bg-(--primary-bg) border border-(--border-color) rounded-xl text-(--text-muted)">
+                  <div className="p-3 text-center text-sm font-semibold bg-primary-bg border border-border-color rounded-xl text-text-muted">
                     This meeting has ended.
                   </div>
                 )}
@@ -378,7 +386,7 @@ const Meetings = () => {
                 {(selectedMeeting.host?._id === user?.id || selectedMeeting.host?.id === user?.id || selectedMeeting.host === user?.id) && (
                   <button
                     onClick={() => handleDeleteMeeting(selectedMeeting.id || selectedMeeting._id)}
-                    className="btn-glass w-full border-none hover:bg-red-500/10 hover:text-red-500 justify-center text-xs text-(--text-muted)"
+                    className="w-full inline-flex items-center justify-center gap-2 bg-transparent text-text-muted hover:bg-red-500/10 hover:text-red-500 rounded-2xl font-semibold text-xs px-6 py-3 transition-all duration-200 min-h-[46px] cursor-pointer"
                   >
                     <Trash2 size={14} />
                     <span>Delete Schedule</span>
@@ -388,16 +396,16 @@ const Meetings = () => {
             </div>
           ) : (
             /* Empty State Details Pane */
-            <div className="premium-card text-center py-16 space-y-4">
-              <Calendar size={64} className="mx-auto text-(--text-muted) opacity-50" />
+            <div className="bg-secondary-bg border border-border-color rounded-3xl p-8 shadow-card-shadow text-center py-16 space-y-4">
+              <Calendar size={64} className="mx-auto text-text-muted opacity-50" />
               <div className="space-y-2">
-                <h3 className="text-xl font-bold text-(--text-main)">Empty State</h3>
-                <p className="text-sm text-(--text-muted) leading-relaxed px-4">
+                <h3 className="text-xl font-bold text-text-main">Empty State</h3>
+                <p className="text-sm text-text-muted leading-relaxed px-4">
                   No upcoming meetings scheduled. Click "New Meeting" to get started.
                 </p>
               </div>
               <div className="pt-4">
-                <Link to="/create" className="btn-metallic inline-flex">
+                <Link to="/create" className="inline-flex items-center justify-center gap-2 bg-linear-to-br from-[#3f3f46] to-[#18181b] dark:from-[#f4f4f5] dark:to-[#a1a1aa] text-white dark:text-zinc-950 rounded-2xl font-semibold text-[0.95rem] px-7 py-3 relative overflow-hidden transition-all duration-300 shadow-md min-h-[46px] hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 before:content-[''] before:absolute before:top-0 before:left-[-150%] before:w-full before:h-full before:bg-[linear-gradient(90deg,transparent,var(--shimmer-color),transparent)] before:transition-all before:duration-700 hover:before:left-[150%] cursor-pointer">
                   <Plus size={16} />
                   <span>Create Meeting</span>
                 </Link>
