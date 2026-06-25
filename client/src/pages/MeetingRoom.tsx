@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import { io } from 'socket.io-client';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -82,7 +83,7 @@ const MeetingRoom = () => {
       setMeeting(res.data);
     } catch (error) {
       console.error('Error fetching meeting:', error);
-      alert('Meeting not found or access denied');
+      toast.error('Meeting not found or access denied');
       navigate('/meetings');
     } finally {
       setLoading(false);
@@ -492,10 +493,10 @@ const MeetingRoom = () => {
         api.post(`/meetings/${id}/transcribe`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         }).then(() => {
-          alert('Recording uploaded and transcribed successfully!');
+          toast.success('Recording uploaded and transcribed successfully!');
         }).catch(err => {
           console.error('Failed to upload audio recording', err);
-          alert('Failed to upload audio recording: ' + (err.response?.data?.message || err.message));
+          toast.error('Failed to upload audio recording: ' + (err.response?.data?.message || err.message));
         }).finally(() => {
           setIsTranscribing(false);
         });

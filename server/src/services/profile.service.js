@@ -34,7 +34,11 @@ const getProfileByUserId = async (userId) => {
   let profile = await Profile.findOne({ userId }).populate('userId', 'email name');
   if (!profile) {
     // Auto-create a blank profile if it doesn't exist
-    profile = await Profile.create({ userId });
+    const user = await User.findById(userId);
+    profile = await Profile.create({ 
+      userId, 
+      fullName: user ? user.name : 'Unknown User' 
+    });
     profile = await profile.populate('userId', 'email name');
   }
   return profile;

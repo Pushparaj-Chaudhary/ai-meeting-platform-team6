@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -59,10 +60,10 @@ const Meetings = () => {
         meetingId: selectedMeeting.id || selectedMeeting._id
       });
       setTasks(prev => [res.data, ...prev]);
-      alert('Task created successfully! You can now assign a team member inline.');
+      toast.success('Task created successfully! You can now assign a team member inline.');
     } catch (err) {
       console.error('Failed to create task', err);
-      alert('Failed to create task.');
+      toast.error('Failed to create task.');
     }
   };
 
@@ -74,7 +75,7 @@ const Meetings = () => {
       setTasks(prev => prev.map(t => (t.id === taskId || t._id === taskId ? res.data : t)));
     } catch (err) {
       console.error('Failed to update task assignee', err);
-      alert('Failed to update assignee.');
+      toast.error('Failed to update assignee.');
     }
   };
 
@@ -138,13 +139,13 @@ const Meetings = () => {
     setGeneratingSummary(true);
     try {
       const res = await api.post(`/ai/${meetingId}/ai-summary`);
-      alert('AI recap successfully generated!');
+      toast.success('AI recap successfully generated!');
       // Update local state
       setMeetings(prev => prev.map(m => (m.id === meetingId || m._id === meetingId ? { ...m, summary: res.data.summary, actionItems: res.data.actionItems } : m)));
       setSelectedMeeting(prev => (prev.id === meetingId || prev._id === meetingId ? { ...prev, summary: res.data.summary, actionItems: res.data.actionItems } : prev));
     } catch (err) {
       console.error('Failed to generate summary', err);
-      alert(err.response?.data?.message || 'Failed to generate summary.');
+      toast.error(err.response?.data?.message || 'Failed to generate summary.');
     } finally {
       setGeneratingSummary(false);
     }
@@ -160,12 +161,12 @@ const Meetings = () => {
         meetingId: taskModal.meetingId,
         assignee: taskAssignee || undefined
       });
-      alert('Action item successfully converted into a Kanban task!');
+      toast.success('Action item successfully converted into a Kanban task!');
       setTaskModal(null);
       setTaskAssignee('');
     } catch (err) {
       console.error('Failed to convert action item to task', err);
-      alert('Failed to create task.');
+      toast.error('Failed to create task.');
     } finally {
       setCreatingTask(false);
     }
@@ -179,7 +180,7 @@ const Meetings = () => {
       navigate(`/meeting-room/${res.data.id || res.data._id}`);
     } catch (error) {
       console.error('Failed to join meeting', error);
-      alert(error.response?.data?.message || 'Failed to join meeting');
+      toast.error(error.response?.data?.message || 'Failed to join meeting');
     }
   };
 

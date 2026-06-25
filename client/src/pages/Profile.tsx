@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 const Profile = () => {
-  const { user, login } = useAuth() as any;
+  const { user, setUser } = useAuth() as any;
   const [profile, setProfile] = useState({
     fullName: '',
     company: '',
@@ -120,14 +120,15 @@ const Profile = () => {
         finalAvatar = avatarRes.data.profile?.avatar || avatarRes.data.avatar;
       }
 
-      // Step 3: Trigger login context update to refresh header details immediately
-      if (login && user) {
+      // Step 3: Trigger context update to refresh header details immediately
+      if (setUser && user) {
         const updatedUser = { 
           ...user, 
           name: profile.fullName || user.name, 
           avatar: finalAvatar || user.avatar 
         };
-        await login(updatedUser, localStorage.getItem('accessToken'), localStorage.getItem('refreshToken'));
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        setUser(updatedUser);
       }
 
       setMessage('Changes saved successfully!');

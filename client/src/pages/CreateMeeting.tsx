@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { 
@@ -32,7 +33,7 @@ const CreateMeeting = () => {
     e.preventDefault();
     if (!emailInput.trim()) return;
     if (!emailInput.includes('@')) {
-      alert('Please enter a valid email address.');
+      toast.error('Please enter a valid email address.');
       return;
     }
     if (!participants.includes(emailInput.trim())) {
