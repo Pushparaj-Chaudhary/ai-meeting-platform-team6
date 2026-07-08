@@ -147,3 +147,13 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
+
+/* Fix mobile Chrome/WebView Fontations rendering glitch with variable fonts */
+@media (max-width: 768px) {
+  body, h1, h2, h3, h4, h5, h6, input, button, select, textarea {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    text-rendering: optimizeSpeed;
+    font-variant-ligatures: none;
+    -webkit-font-variant-ligatures: none;
+  }
+}
