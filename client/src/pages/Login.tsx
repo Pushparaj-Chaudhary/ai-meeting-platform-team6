@@ -10,7 +10,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login, register } = useAuth();
+  const { login, register, demoLogin } = useAuth();
   const navigate = useNavigate();
 
   const handleDemoLogin = async () => {
@@ -24,22 +24,14 @@ const Login = () => {
       demoEmail = `demo_${rand}@example.com`;
       localStorage.setItem('persistedDemoEmail', demoEmail);
     }
-    const demoPassword = 'Password123!';
 
     try {
-      await login({ email: demoEmail, password: demoPassword });
+      await demoLogin(demoEmail);
       navigate('/');
-    } catch (err) {
-      // If login fails (user does not exist yet), auto-register and try again
-      try {
-        await register({ name: 'Demo User', email: demoEmail, password: demoPassword });
-        await login({ email: demoEmail, password: demoPassword });
-        navigate('/');
-      } catch (regErr) {
-        // If registration fails, clear local storage and show error
-        localStorage.removeItem('persistedDemoEmail');
-        setError(regErr.response?.data?.message || 'Failed to initialize demo account.');
-      }
+    } catch (err: any) {
+      // If demo login fails, clear local storage and show error
+      localStorage.removeItem('persistedDemoEmail');
+      setError(err.response?.data?.message || 'Failed to initialize demo account.');
     } finally {
       setIsLoading(false);
     }

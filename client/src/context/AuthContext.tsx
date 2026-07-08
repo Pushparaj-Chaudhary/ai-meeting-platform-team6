@@ -58,6 +58,17 @@ export const AuthProvider = ({ children }) => {
     return loggedInUser;
   };
 
+  const demoLogin = async (demoEmail) => {
+    const response = await api.post('/auth/demo-login', { email: demoEmail });
+    const { user: loggedInUser, tokens } = response.data;
+    
+    localStorage.setItem('accessToken', tokens.access.token);
+    localStorage.setItem('refreshToken', tokens.refresh.token);
+    localStorage.setItem('user', JSON.stringify(loggedInUser));
+    setUser(loggedInUser);
+    return loggedInUser;
+  };
+
   const logout = async () => {
     try {
       const refreshToken = localStorage.getItem('refreshToken');
@@ -81,6 +92,7 @@ export const AuthProvider = ({ children }) => {
     register,
     verifyOTP,
     login,
+    demoLogin,
     logout,
   };
 

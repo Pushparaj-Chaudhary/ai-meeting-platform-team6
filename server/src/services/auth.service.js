@@ -91,8 +91,34 @@ const verifyEmail = async (verifyEmailToken) => {
   }
 };
 
+/**
+ * Login or register a demo user
+ * @param {string} email
+ * @returns {Promise<User>}
+ */
+const loginOrRegisterDemoUser = async (email) => {
+  let user = await userService.getUserByEmail(email);
+  const demoPassword = 'Password123!';
+  if (!user) {
+    user = await userService.createUser({
+      name: 'Demo User',
+      email,
+      password: demoPassword,
+    });
+  }
+
+  // Force email verification to bypass OTP steps completely for the demo user
+  if (!user.isEmailVerified) {
+    user.isEmailVerified = true;
+    await user.save();
+  }
+
+  return user;
+};
+
 export default {
   loginUserWithEmailAndPassword,
+  loginOrRegisterDemoUser,
   logout,
   refreshAuth,
   resetPassword,

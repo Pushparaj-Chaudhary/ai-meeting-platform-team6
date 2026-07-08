@@ -57,6 +57,12 @@ const verifyOTP = {
   }),
 };
 
+const demoLogin = {
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+  }),
+};
+
 export default {
   register,
   login,
@@ -66,4 +72,5 @@ export default {
   resetPassword,
   verifyEmail,
   verifyOTP,
+  demoLogin,
 };

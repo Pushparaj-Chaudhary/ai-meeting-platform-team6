@@ -23,6 +23,16 @@ const login = catchAsync(async (req, res) => {
   res.send({ user, tokens });
 });
 
+const demoLogin = catchAsync(async (req, res) => {
+  const { email } = req.body;
+  if (!email || !email.startsWith('demo_') || !email.endsWith('@example.com')) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid demo email format');
+  }
+  const user = await authService.loginOrRegisterDemoUser(email);
+  const tokens = await tokenService.generateAuthTokens(user);
+  res.send({ user, tokens });
+});
+
 const logout = catchAsync(async (req, res) => {
   await authService.logout(req.body.refreshToken);
   res.status(httpStatus.NO_CONTENT).send();
@@ -78,6 +88,7 @@ const verifyOTP = catchAsync(async (req, res) => {
 export default {
   register,
   login,
+  demoLogin,
   logout,
   refreshTokens,
   forgotPassword,
