@@ -11,7 +11,6 @@ import {
   ChevronRight, 
   Plus, 
   CheckSquare, 
-  Upload, 
   FileText,
   UserCheck,
   MessageSquare,
@@ -205,14 +204,6 @@ const Home = () => {
                 <Calendar size={18} />
                 <span>View Past Meetings</span>
               </Link>
-
-              <button 
-                onClick={() => toast.success('Recording upload module coming soon.')}
-                className="inline-flex items-center justify-center gap-2 bg-glass-bg border border-border-color text-text-main rounded-2xl font-semibold text-[0.95rem] px-6 py-3 transition-all duration-200 min-h-[46px] hover:bg-border-color hover:border-text-muted w-full cursor-pointer"
-              >
-                <Upload size={18} />
-                <span>Upload Recording</span>
-              </button>
 
               <button 
                 onClick={() => setShowJoinModal(true)}

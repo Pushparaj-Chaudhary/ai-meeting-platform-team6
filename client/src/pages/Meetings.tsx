@@ -440,52 +440,58 @@ const Meetings = () => {
               )}
 
               {/* AI Action Items Section */}
-              {selectedMeeting.actionItems && selectedMeeting.actionItems.length > 0 && (
+              {(selectedMeeting.status === 'ended' || selectedMeeting.summary || selectedMeeting.transcript) && (
                 <div className="space-y-2 border-t border-border-color pt-4 animate-fade-in">
                   <h4 className="text-xs font-bold text-text-muted uppercase tracking-wider">AI Action Items</h4>
-                  <div className="space-y-2">
-                    {selectedMeeting.actionItems.map((item, index) => {
-                      const mId = selectedMeeting.id || selectedMeeting._id;
-                      const associatedTask = tasks.find(t => 
-                        t.title === item.text && 
-                        (t.meetingId?._id === mId || t.meetingId?.id === mId || t.meetingId === mId)
-                      );
+                  {selectedMeeting.actionItems && selectedMeeting.actionItems.length > 0 ? (
+                    <div className="space-y-2">
+                      {selectedMeeting.actionItems.map((item, index) => {
+                        const mId = selectedMeeting.id || selectedMeeting._id;
+                        const associatedTask = tasks.find(t => 
+                          t.title === item.text && 
+                          (t.meetingId?._id === mId || t.meetingId?.id === mId || t.meetingId === mId)
+                        );
 
-                      return (
-                        <div key={index} className="flex flex-col gap-3 p-4 bg-primary-bg rounded-xl border border-border-color text-xs shadow-sm">
-                          <span className="text-text-main leading-relaxed wrap-break-word font-medium">{item.text}</span>
-                          {associatedTask ? (
-                            <div className="flex items-center gap-2 pt-2.5 border-t border-border-color/30 w-full justify-between shrink-0">
-                              <span className="text-[10px] text-text-muted font-bold uppercase">Assignee:</span>
-                              <div className="relative flex items-center">
-                                <select
-                                  value={associatedTask.assignee?.id || associatedTask.assignee?._id || associatedTask.assignee || ''}
-                                  onChange={(e) => handleAssigneeChange(associatedTask.id || associatedTask._id, e.target.value)}
-                                  className="bg-secondary-bg border border-border-color rounded-lg pl-2 pr-6 py-1.5 text-[11px] text-text-main focus:outline-none focus:border-text-main appearance-none cursor-pointer animate-fade-in"
-                                >
-                                  <option value="">Unassigned</option>
-                                  {users.map(u => (
-                                    <option key={u.id || u._id} value={u.id || u._id}>{u.name}</option>
-                                  ))}
-                                </select>
-                                <ChevronDown className="absolute right-1 text-text-muted pointer-events-none" size={12} />
+                        return (
+                          <div key={index} className="flex flex-col gap-3 p-4 bg-primary-bg rounded-xl border border-border-color text-xs shadow-sm">
+                            <span className="text-text-main leading-relaxed wrap-break-word font-medium">{item.text}</span>
+                            {associatedTask ? (
+                              <div className="flex items-center gap-2 pt-2.5 border-t border-border-color/30 w-full justify-between shrink-0">
+                                <span className="text-[10px] text-text-muted font-bold uppercase">Assignee:</span>
+                                <div className="relative flex items-center">
+                                  <select
+                                    value={associatedTask.assignee?.id || associatedTask.assignee?._id || associatedTask.assignee || ''}
+                                    onChange={(e) => handleAssigneeChange(associatedTask.id || associatedTask._id, e.target.value)}
+                                    className="bg-secondary-bg border border-border-color rounded-lg pl-2 pr-6 py-1.5 text-[11px] text-text-main focus:outline-none focus:border-text-main appearance-none cursor-pointer animate-fade-in"
+                                  >
+                                    <option value="">Unassigned</option>
+                                    {users.map(u => (
+                                      <option key={u.id || u._id} value={u.id || u._id}>{u.name}</option>
+                                    ))}
+                                  </select>
+                                  <ChevronDown className="absolute right-1 text-text-muted pointer-events-none" size={12} />
+                                </div>
                               </div>
-                            </div>
-                          ) : (
-                            <div className="flex justify-end pt-2.5 border-t border-border-color/30 w-full shrink-0">
-                              <button
-                                type="button"
-                                onClick={() => handleDirectCreateTask(item.text)}
-                                className="px-3.5 py-1.5 bg-accent-color hover:bg-accent-hover text-primary-bg text-[10px] font-bold rounded-lg transition-all duration-200 cursor-pointer shadow-sm hover:-translate-y-0.5"
-                              >
-                                Convert to Task
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
+                            ) : (
+                              <div className="flex justify-end pt-2.5 border-t border-border-color/30 w-full shrink-0">
+                                <button
+                                  type="button"
+                                  onClick={() => handleDirectCreateTask(item.text)}
+                                  className="px-3.5 py-1.5 bg-accent-color hover:bg-accent-hover text-primary-bg text-[10px] font-bold rounded-lg transition-all duration-200 cursor-pointer shadow-sm hover:-translate-y-0.5"
+                                >
+                                  Convert to Task
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-text-muted italic bg-primary-bg p-4 rounded-xl border border-border-color border-dashed">
+                      No action items identified for this meeting.
+                    </p>
+                  )}
                 </div>
               )}
 

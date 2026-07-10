@@ -22,7 +22,8 @@ import {
   Maximize2,
   Minimize2,
   ChevronLeft,
-  UserCheck
+  UserCheck,
+  FileText
 } from 'lucide-react';
 
 const MeetingRoom = () => {
@@ -32,9 +33,20 @@ const MeetingRoom = () => {
   const { theme } = useTheme() as any;
 
   // Meeting metadata states
-  const [meeting, setMeeting] = useState(null);
+  const [meeting, setMeeting] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isJoined, setIsJoined] = useState(false); // Lobby vs Room state
+
+  const isHost = !!(meeting && user && (
+    meeting.host === user.id || 
+    meeting.host === user._id || 
+    (meeting.host && typeof meeting.host === 'object' && (
+      (meeting.host as any).id === user.id ||
+      (meeting.host as any).id === user._id ||
+      (meeting.host as any)._id === user.id ||
+      (meeting.host as any)._id === user._id
+    ))
+  ));
 
   // Media toggle states
   const [audioEnabled, setAudioEnabled] = useState(true);
@@ -45,7 +57,12 @@ const MeetingRoom = () => {
   const [isTranscribing, setIsTranscribing] = useState(false);
 
   // Panels toggle states
-  const [activePanel, setActivePanel] = useState(null); // 'chat', 'participants', or null
+  const [activePanel, setActivePanel] = useState<string | null>(null); // 'chat', 'participants', 'transcripts', or null
+  const [isHandRaised, setIsHandRaised] = useState(false);
+  const [liveTranscriptionEnabled, setLiveTranscriptionEnabled] = useState(false);
+  const [currentCaptions, setCurrentCaptions] = useState<Record<string, { senderName: string, text: string, timer: any }>>({});
+  const [transcriptLines, setTranscriptLines] = useState<Array<{ senderName: string, text: string, timestamp: string }>>([]);
+  const [isSavingTranscript, setIsSavingTranscript] = useState(false);
 
   // Sockets & WebRTC states
   const [socket, setSocket] = useState(null);
@@ -266,11 +283,31 @@ const MeetingRoom = () => {
           return {
             ...p,
             audioEnabled: type === 'audio' ? enabled : p.audioEnabled,
-            videoEnabled: type === 'video' ? enabled : p.videoEnabled
+            videoEnabled: type === 'video' ? enabled : p.videoEnabled,
+            handRaised: type === 'handRaised' ? enabled : p.handRaised
           };
         }
         return p;
       }));
+
+      if (type === 'handRaised') {
+        setPeers(prev => {
+          const peer = prev.find(p => p.socketId === socketId);
+          if (peer) {
+            if (enabled) {
+              toast(`${peer.userName} raised their hand ✋`, { icon: '✋' });
+            } else {
+              toast(`${peer.userName} lowered their hand`, { icon: '👇' });
+            }
+          }
+          return prev;
+        });
+      }
+    });
+
+    // 10. Receive Live Transcript chunk
+    newSocket.on('receive-live-transcript', (data) => {
+      handleReceiveLiveTranscript(data);
     });
   };
 
@@ -315,7 +352,8 @@ const MeetingRoom = () => {
           userAvatar: peerInfo.userAvatar,
           stream: remoteStream,
           audioEnabled: peerInfo.audioEnabled,
-          videoEnabled: peerInfo.videoEnabled
+          videoEnabled: peerInfo.videoEnabled,
+          handRaised: peerInfo.handRaised || false
         };
 
         if (index > -1) {
@@ -342,6 +380,167 @@ const MeetingRoom = () => {
       }
     }
   };
+
+  const handleReceiveLiveTranscript = (data: { senderId: string, senderName: string, text: string, isFinal: boolean }) => {
+    const { senderId, senderName, text, isFinal } = data;
+
+    // Update active captions
+    setCurrentCaptions(prev => {
+      const copy = { ...prev };
+      if (copy[senderId]?.timer) {
+        clearTimeout(copy[senderId].timer);
+      }
+
+      const timer = setTimeout(() => {
+        setCurrentCaptions(p => {
+          const c = { ...p };
+          delete c[senderId];
+          return c;
+        });
+      }, 4000);
+
+      copy[senderId] = {
+        senderName,
+        text,
+        timer
+      };
+      return copy;
+    });
+
+    // If final, append to transcript lines
+    if (isFinal) {
+      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      setTranscriptLines(prev => [
+        ...prev,
+        {
+          senderName,
+          text,
+          timestamp
+        }
+      ]);
+    }
+  };
+
+  const handleSaveLiveTranscript = async () => {
+    if (transcriptLines.length === 0) {
+      toast.error('No transcripts to save');
+      return;
+    }
+    setIsSavingTranscript(true);
+    const fullTranscriptText = transcriptLines
+      .map(line => `${line.senderName}: ${line.text}`)
+      .join('\n');
+
+    try {
+      await api.post(`/meetings/${id}/save-transcript`, {
+        transcriptText: fullTranscriptText
+      });
+      toast.success('Live transcript saved and AI Recap generated!');
+    } catch (err: any) {
+      console.error('Failed to save live transcript', err);
+      toast.error('Failed to save live transcript: ' + (err.response?.data?.message || err.message));
+    } finally {
+      setIsSavingTranscript(false);
+    }
+  };
+
+  const handleToggleHandRaise = () => {
+    if (!isJoined) return;
+    const nextState = !isHandRaised;
+    setIsHandRaised(nextState);
+    if (socket) {
+      socket.emit('toggle-hand-raise', { roomId: id, raised: nextState });
+    }
+  };
+
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (!isJoined || !socket) return;
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      console.warn('Speech Recognition not supported in this browser.');
+      return;
+    }
+
+    if (liveTranscriptionEnabled && audioEnabled) {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      recognition.onresult = (event: any) => {
+        let interimTranscript = '';
+        let finalTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript;
+          } else {
+            interimTranscript += event.results[i][0].transcript;
+          }
+        }
+
+        const currentText = finalTranscript || interimTranscript;
+        if (currentText.trim()) {
+          // Emit the live transcript to other peers
+          socket.emit('send-live-transcript', {
+            roomId: id,
+            text: currentText,
+            isFinal: !!finalTranscript,
+            senderName: user?.name || 'Anonymous',
+            senderId: user?.id || user?._id || 'guest'
+          });
+
+          // Show my own captions locally
+          handleReceiveLiveTranscript({
+            senderId: user?.id || user?._id || 'guest',
+            senderName: 'You',
+            text: currentText,
+            isFinal: !!finalTranscript
+          });
+        }
+      };
+
+      recognition.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
+        if (event.error === 'no-speech') {
+          return;
+        }
+      };
+
+      recognition.onend = () => {
+        // Restart recognition if it was enabled and still joined
+        if (liveTranscriptionEnabled && audioEnabled && isJoined) {
+          try {
+            recognition.start();
+          } catch (e) {
+            console.error('Failed to restart speech recognition', e);
+          }
+        }
+      };
+
+      try {
+        recognition.start();
+        recognitionRef.current = recognition;
+      } catch (err) {
+        console.error('Error starting speech recognition:', err);
+      }
+    } else {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+        recognitionRef.current = null;
+      }
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+        recognitionRef.current = null;
+      }
+    };
+  }, [liveTranscriptionEnabled, audioEnabled, isJoined, socket]);
 
   // Local Device Toggles
   const handleToggleAudio = () => {
@@ -586,14 +785,26 @@ const MeetingRoom = () => {
   };
 
   // Exit meeting room
-  const handleLeaveMeeting = () => {
+  const handleLeaveMeeting = async () => {
+    if (isHost && transcriptLines.length > 0) {
+      const fullTranscriptText = transcriptLines
+        .map(line => `${line.senderName}: ${line.text}`)
+        .join('\n');
+      try {
+        await api.post(`/meetings/${id}/save-transcript`, {
+          transcriptText: fullTranscriptText
+        });
+      } catch (err) {
+        console.error('Auto-saving transcript failed on leave:', err);
+      }
+    }
     cleanupMedia();
     navigate('/meetings');
   };
 
   // Helper to draw remote peer videos on track load
   const RemoteVideoTile = ({ peer }) => {
-    const videoRef = useRef(null);
+    const videoRef = useRef<any>(null);
 
     useEffect(() => {
       if (videoRef.current && peer.stream) {
@@ -614,6 +825,11 @@ const MeetingRoom = () => {
             <div className="w-24 h-24 rounded-full bg-zinc-800 border-4 border-zinc-700 flex items-center justify-center text-4xl text-zinc-400 font-extrabold shadow-inner">
               {peer.userName.charAt(0).toUpperCase()}
             </div>
+          </div>
+        )}
+        {peer.handRaised && (
+          <div className="absolute top-4 right-4 bg-yellow-500 text-white p-2 rounded-full shadow-lg text-lg animate-bounce select-none z-10">
+            ✋
           </div>
         )}
         <div className="absolute bottom-4 left-4 bg-glass-bg border border-border-color px-3 py-1.5 rounded-lg backdrop-blur-md text-xs font-semibold text-text-main shadow flex items-center gap-1.5">
@@ -784,10 +1000,15 @@ const MeetingRoom = () => {
                 className={`w-full h-full object-cover ${!videoEnabled ? 'hidden' : ''}`}
               ></video>
               {!videoEnabled && (
-                <div className="absolute inset-0 flex items-center justify-center bg-zinc-950">
+                <div className="absolute inset-0 flex items-center justify-center bg-zinc-955">
                   <div className="w-24 h-24 rounded-full bg-zinc-900 border-4 border-zinc-800 flex items-center justify-center text-4xl text-zinc-500 font-extrabold shadow-inner">
                     {user?.name?.charAt(0).toUpperCase()}
                   </div>
+                </div>
+              )}
+              {isHandRaised && (
+                <div className="absolute top-4 right-4 bg-yellow-500 text-white p-2 rounded-full shadow-lg text-lg animate-bounce select-none z-10">
+                  ✋
                 </div>
               )}
               <div className="absolute bottom-4 left-4 bg-glass-bg border border-border-color px-3 py-1.5 rounded-lg backdrop-blur-md text-xs font-semibold text-text-main shadow flex items-center gap-1.5">
@@ -821,6 +1042,12 @@ const MeetingRoom = () => {
                   <>
                     <Users size={16} />
                     <span>Participants ({peers.length + 1})</span>
+                  </>
+                )}
+                {activePanel === 'transcripts' && (
+                  <>
+                    <FileText size={16} />
+                    <span>Live Transcripts</span>
                   </>
                 )}
               </h3>
@@ -907,7 +1134,10 @@ const MeetingRoom = () => {
                       {user?.name?.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-text-main">{user?.name} (You)</p>
+                      <p className="text-xs font-bold text-text-main flex items-center gap-1">
+                        {isHandRaised && <span className="text-sm select-none animate-pulse">✋</span>}
+                        <span>{user?.name} (You)</span>
+                      </p>
                       <p className="text-[9px] text-text-muted">Organizer</p>
                     </div>
                   </div>
@@ -929,7 +1159,10 @@ const MeetingRoom = () => {
                         </div>
                       )}
                       <div>
-                        <p className="text-xs font-bold text-text-main truncate max-w-[120px]">{peer.userName}</p>
+                        <p className="text-xs font-bold text-text-main truncate max-w-[120px] flex items-center gap-1">
+                          {peer.handRaised && <span className="text-sm select-none animate-pulse">✋</span>}
+                          <span>{peer.userName}</span>
+                        </p>
                         <p className="text-[9px] text-text-muted">Participant</p>
                       </div>
                     </div>
@@ -941,9 +1174,65 @@ const MeetingRoom = () => {
                 ))}
               </div>
             )}
+
+            {/* Panel Content: TRANSCRIPTS LIST */}
+            {activePanel === 'transcripts' && (
+              <div className="flex-1 flex flex-col justify-between overflow-hidden bg-secondary-bg">
+                <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                  {transcriptLines.length === 0 ? (
+                    <div className="text-center py-10">
+                      <FileText size={36} className="mx-auto text-text-muted opacity-40 mb-2" />
+                      <p className="text-xs text-text-muted">No live transcripts yet. Enable captions and speak to see transcripts here!</p>
+                    </div>
+                  ) : (
+                    transcriptLines.map((line, idx) => (
+                      <div key={idx} className="p-3 bg-primary-bg border border-border-color rounded-2xl animate-fade-in-up">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-[10px] font-bold text-blue-500">{line.senderName}</span>
+                          <span className="text-[8px] text-text-muted">{line.timestamp}</span>
+                        </div>
+                        <p className="text-xs text-text-main leading-relaxed font-semibold">{line.text}</p>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {/* Host Save/Generate Recap Action */}
+                {isHost && transcriptLines.length > 0 && (
+                  <div className="p-3 border-t border-border-color bg-primary-bg text-center">
+                    <button
+                      onClick={handleSaveLiveTranscript}
+                      disabled={isSavingTranscript}
+                      className="w-full py-2.5 bg-accent-color hover:bg-accent-hover text-primary-bg font-bold rounded-xl text-xs transition-all duration-200 cursor-pointer shadow-sm disabled:opacity-50 flex items-center justify-center gap-1.5"
+                    >
+                      {isSavingTranscript ? (
+                        <>
+                          <div className="animate-spin rounded-full h-3 w-3 border-t-2 border-b-2 border-primary-bg"></div>
+                          <span>Saving & Generating Recap...</span>
+                        </>
+                      ) : (
+                        <span>Save & Generate AI Recap</span>
+                      )}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </aside>
         )}
       </div>
+
+      {/* Floating Captions Overlay */}
+      {Object.keys(currentCaptions).length > 0 && (
+        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-30 max-w-2xl w-full px-4 pointer-events-none flex flex-col gap-2 items-center">
+          {Object.entries(currentCaptions).map(([sid, cap]) => (
+            <div key={sid} className="bg-zinc-950/80 border border-zinc-800 text-white px-4 py-2 rounded-2xl backdrop-blur-md text-xs font-semibold shadow-2xl animate-fade-in text-center">
+              <span className="text-blue-400 font-bold mr-1.5">{cap.senderName}:</span>
+              <span>{cap.text}</span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Control Buttons Bar */}
       <footer className="bg-secondary-bg border-t border-border-color p-3 sm:p-5 flex flex-wrap justify-center sm:justify-between items-center gap-4 z-10 shrink-0">
@@ -1005,6 +1294,34 @@ const MeetingRoom = () => {
           >
             <Radio size={18} />
           </button>
+
+          {/* Live Captions (CC) Toggle */}
+          <button
+            onClick={() => setLiveTranscriptionEnabled(prev => !prev)}
+            className={`p-3.5 rounded-xl border transition-all duration-200 cursor-pointer shadow-sm flex items-center justify-center ${
+              liveTranscriptionEnabled 
+              ? 'bg-blue-500 border-blue-400 text-white shadow-blue-500/10 hover:bg-blue-600'
+              : 'bg-primary-bg border-border-color text-text-main hover:bg-border-color'
+            }`}
+            title={liveTranscriptionEnabled ? "Disable Live Captions" : "Enable Live Captions"}
+            style={{ minHeight: '46px', minWidth: '46px' }}
+          >
+            <span className="text-xs font-bold leading-none select-none">CC</span>
+          </button>
+
+          {/* Raise Hand Toggle */}
+          <button
+            onClick={handleToggleHandRaise}
+            className={`p-3.5 rounded-xl border transition-all duration-200 cursor-pointer shadow-sm flex items-center justify-center ${
+              isHandRaised 
+              ? 'bg-yellow-500 border-yellow-400 text-white shadow-yellow-500/10 hover:bg-yellow-600'
+              : 'bg-primary-bg border-border-color text-text-main hover:bg-border-color'
+            }`}
+            title={isHandRaised ? "Lower Hand" : "Raise Hand"}
+            style={{ minHeight: '46px', minWidth: '46px' }}
+          >
+            <span className="text-base select-none leading-none">✋</span>
+          </button>
         </div>
 
         {/* Center: Leave button */}
@@ -1047,6 +1364,20 @@ const MeetingRoom = () => {
             style={{ minHeight: '46px', minWidth: '46px' }}
           >
             <Users size={18} />
+          </button>
+
+          {/* Transcripts Panel Toggle */}
+          <button
+            onClick={() => handleTogglePanel('transcripts')}
+            className={`p-3.5 rounded-xl border transition-all duration-200 cursor-pointer shadow-sm flex items-center justify-center ${
+              activePanel === 'transcripts' 
+              ? 'bg-text-main border-text-main text-secondary-bg'
+              : 'bg-primary-bg border-border-color text-text-main hover:bg-border-color'
+            }`}
+            title="Live Transcripts"
+            style={{ minHeight: '46px', minWidth: '46px' }}
+          >
+            <FileText size={18} />
           </button>
         </div>
       </footer>

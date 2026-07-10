@@ -53,7 +53,8 @@ export const handleSocket = (io) => {
         userAvatar: userAvatar || '',
         roomId,
         audioEnabled,
-        videoEnabled
+        videoEnabled,
+        handRaised: false
       };
 
       activeParticipants.set(socket.id, participantInfo);
@@ -125,6 +126,16 @@ export const handleSocket = (io) => {
       });
     });
 
+    // Live transcription: relay transcript chunk
+    socket.on('send-live-transcript', ({ roomId, text, isFinal, senderName, senderId }) => {
+      socket.to(roomId).emit('receive-live-transcript', {
+        senderId,
+        senderName,
+        text,
+        isFinal
+      });
+    });
+
     // Device status toggle: Audio (mute/unmute)
     socket.on('toggle-audio', ({ roomId, enabled }) => {
       const user = activeParticipants.get(socket.id);
@@ -147,6 +158,19 @@ export const handleSocket = (io) => {
           socketId: socket.id,
           type: 'video',
           enabled
+        });
+      }
+    });
+
+    // Device status toggle: Raise Hand
+    socket.on('toggle-hand-raise', ({ roomId, raised }) => {
+      const user = activeParticipants.get(socket.id);
+      if (user) {
+        user.handRaised = raised;
+        socket.to(roomId).emit('user-device-status', {
+          socketId: socket.id,
+          type: 'handRaised',
+          enabled: raised
         });
       }
     });

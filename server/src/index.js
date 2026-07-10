@@ -11,6 +11,8 @@ import _import2 from './config/config.js';
 const config = _import2;
 import _import3 from './config/logger.js';
 const logger = _import3;
+import _import4 from './models/index.js';
+const { User } = _import4;
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -32,8 +34,23 @@ const pingSelf = (url) => {
 };
 
 mongoose.set('strictQuery', false);
-mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
+mongoose.connect(config.mongoose.url, config.mongoose.options).then(async () => {
   logger.info('Connected to MongoDB');
+  try {
+    const demoEmail = 'demo@example.com';
+    const demoUser = await User.findOne({ email: demoEmail });
+    if (!demoUser) {
+      await User.create({
+        name: 'Demo User',
+        email: demoEmail,
+        password: 'Password123!',
+        isEmailVerified: true,
+      });
+      logger.info('Demo user created: demo@example.com / Password123!');
+    }
+  } catch (error) {
+    logger.error(`Error seeding demo user: ${error.message}`);
+  }
   server.listen(config.port, () => {
     logger.info(`Listening to port ${config.port}`);
 

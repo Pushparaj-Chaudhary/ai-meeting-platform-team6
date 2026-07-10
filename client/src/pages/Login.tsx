@@ -10,32 +10,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login, register, demoLogin } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
-
-  const handleDemoLogin = async () => {
-    setError('');
-    setIsLoading(true);
-
-    // Retrieve or generate a unique demo email for this browser session
-    let demoEmail = localStorage.getItem('persistedDemoEmail');
-    if (!demoEmail) {
-      const rand = Math.random().toString(36).substring(2, 10);
-      demoEmail = `demo_${rand}@example.com`;
-      localStorage.setItem('persistedDemoEmail', demoEmail);
-    }
-
-    try {
-      await demoLogin(demoEmail);
-      navigate('/');
-    } catch (err: any) {
-      // If demo login fails, clear local storage and show error
-      localStorage.removeItem('persistedDemoEmail');
-      setError(err.response?.data?.message || 'Failed to initialize demo account.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -127,7 +103,12 @@ const Login = () => {
             </div>
             
             <div className="mb-5">
-              <label htmlFor="password" className="block text-[0.85rem] font-semibold mb-2 text-text-muted uppercase tracking-wider">Password</label>
+              <div className="flex justify-between items-center mb-2">
+                <label htmlFor="password" className="block text-[0.85rem] font-semibold text-text-muted uppercase tracking-wider">Password</label>
+                <Link to="/forgot-password" className="text-xs font-semibold text-accent-color hover:underline">
+                  Forgot Password?
+                </Link>
+              </div>
               <div className="relative flex items-center">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -153,21 +134,6 @@ const Login = () => {
               {isLoading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
-
-          <div className="flex items-center my-5">
-            <div className="flex-1 border-t border-border-color"></div>
-            <span className="px-3 text-xs text-text-muted font-semibold uppercase tracking-wider">or</span>
-            <div className="flex-1 border-t border-border-color"></div>
-          </div>
-
-          <button 
-            type="button" 
-            onClick={handleDemoLogin}
-            className="w-full py-[0.85rem] bg-glass-bg hover:bg-border-color text-text-main border border-border-color rounded-[14px] text-[0.95rem] font-semibold cursor-pointer transition-all duration-200 hover:-translate-y-px flex items-center justify-center gap-2"
-            disabled={isLoading}
-          >
-            Sign In with Demo Account
-          </button>
           
           <Link to="/register" className="block text-center mt-6 text-text-muted text-sm no-underline hover:text-text-main">
             Don't have an account? <span className="text-text-main font-semibold underline">Sign up</span>

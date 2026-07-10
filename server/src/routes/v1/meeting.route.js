@@ -40,5 +40,6 @@ router.post('/join', auth(), validate(meetingValidation.joinMeeting), meetingCon
 router.post('/:meetingId/start', auth(), validate(meetingValidation.meetingId), meetingController.startMeeting);
 router.post('/:meetingId/end', auth(), validate(meetingValidation.meetingId), meetingController.endMeeting);
 router.post('/:meetingId/transcribe', auth(), uploadAudio.single('audio'), meetingController.transcribeMeeting);
+router.post('/:meetingId/save-transcript', auth(), validate(meetingValidation.meetingId), meetingController.saveTranscriptText);
 
 export default router;

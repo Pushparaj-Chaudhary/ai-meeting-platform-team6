@@ -110,6 +110,52 @@ const transcribeMeeting = catchAsync(async (req, res) => {
   }
 });
 
+const saveTranscriptText = catchAsync(async (req, res) => {
+  const meeting = await meetingService.getMeetingById(req.params.meetingId);
+  if (!meeting) {
+    return res.status(httpStatus.NOT_FOUND).json({ message: 'Meeting not found' });
+  }
+
+  const { transcriptText } = req.body;
+  if (transcriptText === undefined) {
+    return res.status(httpStatus.BAD_REQUEST).json({ message: 'transcriptText is required' });
+  }
+
+  meeting.transcript = transcriptText;
+
+  if (transcriptText.trim().length > 0) {
+    try {
+      const { summary, actionItems } = await aiService.analyzeMeeting(transcriptText);
+      meeting.summary = summary;
+      meeting.actionItems = actionItems.map((item) => ({
+        text: item.text,
+        completed: false
+      }));
+    } catch (aiErr) {
+      console.error('AI recap generation failed during live transcript save:', aiErr);
+    }
+  }
+
+  await meeting.save();
+
+  const hostId = meeting.host._id || meeting.host.id || meeting.host;
+  const notification = await Notification.create({
+    userId: hostId,
+    title: 'AI Recap Ready',
+    message: `AI transcription and summary for "${meeting.title}" are now available from live transcription.`,
+    type: 'ai_summary'
+  });
+
+  sendLiveNotification(hostId, notification);
+
+  res.status(httpStatus.OK).json({
+    message: 'Meeting transcription and analysis completed successfully',
+    transcript: meeting.transcript,
+    summary: meeting.summary,
+    actionItems: meeting.actionItems
+  });
+});
+
 export default {
   createMeeting,
   getMeetings,
@@ -119,5 +165,6 @@ export default {
   joinMeeting,
   startMeeting,
   endMeeting,
-  transcribeMeeting
+  transcribeMeeting,
+  saveTranscriptText
 };
